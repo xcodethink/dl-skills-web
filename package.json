@@ -18,5 +18,8 @@
     "pagefind": "^1.4.0",
     "preact": "^10.28.4",
     "tailwindcss": "^4.2.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260228.0"
   }
 }
