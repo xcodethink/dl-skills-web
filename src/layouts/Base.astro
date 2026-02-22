@@ -148,7 +148,7 @@ const websiteSchema = {
         Claude Code Skills
       </a>
 
-      {workspace && <div id="workspace-nav-slot" class="flex-1 flex items-center justify-center min-w-0" />}
+      {workspace && <div id="workspace-nav-slot" class="flex-1 flex items-center justify-end md:justify-center min-w-0" />}
 
       <div class="flex items-center gap-1">
         {!workspace && navItems.map(item => (
@@ -170,7 +170,7 @@ const websiteSchema = {
 
         <button
           id="lang-toggle"
-          class="px-2 py-1.5 rounded-xl text-xs font-semibold text-text-tertiary hover:text-text-primary hover:bg-surface-alt/80 transition-all duration-200"
+          class:list={["px-2 py-1.5 rounded-xl text-xs font-semibold text-text-tertiary hover:text-text-primary hover:bg-surface-alt/80 transition-all duration-200", workspace && "hidden"]}
           aria-label="Toggle language"
         >
           <span data-lang-cn>EN</span>

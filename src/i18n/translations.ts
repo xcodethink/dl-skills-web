@@ -49,6 +49,7 @@ const cn = {
   'ui.viewsTooltip': '浏览次数',
   'ui.copiesTooltip': '复制次数',
   'ui.invocationsTooltip': '调用次数',
+  'ui.menu': '导航',
 
   // Setup page
   'setup.title': '快速接入',
@@ -156,6 +157,7 @@ const en: Record<keyof typeof cn, string> = {
   'ui.viewsTooltip': 'Views',
   'ui.copiesTooltip': 'Copies',
   'ui.invocationsTooltip': 'Invocations',
+  'ui.menu': 'Menu',
 
   // Setup page
   'setup.title': 'Quick Setup',

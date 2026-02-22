@@ -265,6 +265,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [navSlot, setNavSlot] = useState<HTMLElement | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
@@ -450,44 +451,116 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
     document.documentElement.lang = next === 'cn' ? 'zh-CN' : 'en';
   };
 
+  // Close mobile nav on escape
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const close = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileNavOpen(false); };
+    document.addEventListener('keydown', close);
+    return () => document.removeEventListener('keydown', close);
+  }, [mobileNavOpen]);
+
   // --- Nav Tabs (rendered via portal into Base.astro nav bar) ---
   const navTabs = (
     <div class="flex items-center gap-0.5 md:gap-1">
-      {NAV_TAB_IDS.map(tab => (
-        <button
-          key={tab.id}
-          onClick={() => handleTabClick(tab.id)}
-          class={`flex items-center gap-1.5 px-2.5 md:px-4 py-1.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${
-            (tab.id === 'skills' && activeView === 'skills') || (tab.id === 'workflows' && activeView === 'workflows')
-              ? 'text-accent bg-accent-muted'
-              : 'text-text-secondary hover:text-text-primary hover:bg-surface-alt/80'
-          }`}
-        >
-          <IconSvg name={tab.icon} size={14} />
-          <span class="hidden md:inline">{NAV_TAB_KEYS[tab.id][lang]}</span>
-        </button>
-      ))}
-      <div class="hidden md:block w-px h-4 bg-border/40 mx-1" />
+      {/* Desktop: horizontal nav tabs */}
+      <div class="hidden md:flex items-center gap-1">
+        {NAV_TAB_IDS.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => handleTabClick(tab.id)}
+            class={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${
+              (tab.id === 'skills' && activeView === 'skills') || (tab.id === 'workflows' && activeView === 'workflows')
+                ? 'text-accent bg-accent-muted'
+                : 'text-text-secondary hover:text-text-primary hover:bg-surface-alt/80'
+            }`}
+          >
+            <IconSvg name={tab.icon} size={14} />
+            {NAV_TAB_KEYS[tab.id][lang]}
+          </button>
+        ))}
+        <div class="w-px h-4 bg-border/40 mx-1" />
+      </div>
+
+      {/* Mobile: hamburger button */}
+      <button
+        onClick={() => setMobileNavOpen(true)}
+        class="md:hidden p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-alt/80 transition-all duration-200 cursor-pointer"
+        aria-label="Open menu"
+      >
+        <IconSvg name="menu" size={20} />
+      </button>
+
       <button
         onClick={handleLangToggle}
-        class="px-2 py-1.5 rounded-xl text-xs font-semibold text-text-tertiary hover:text-text-primary hover:bg-surface-alt/80 transition-all duration-200 cursor-pointer"
+        class="hidden md:block px-2 py-1.5 rounded-xl text-xs font-semibold text-text-tertiary hover:text-text-primary hover:bg-surface-alt/80 transition-all duration-200 cursor-pointer"
       >
         {lang === 'cn' ? 'EN' : '中'}
       </button>
     </div>
   );
 
+  // --- Mobile Nav Drawer ---
+  const mobileNavDrawer = mobileNavOpen && (
+    <div class="fixed inset-0 z-[60] md:hidden">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileNavOpen(false)} />
+      <div class="absolute top-0 right-0 bottom-0 w-64 bg-surface border-l border-border/60 shadow-2xl flex flex-col animate-slide-in-right">
+        {/* Drawer header */}
+        <div class="flex items-center justify-between px-5 py-4 border-b border-border/40">
+          <span class="text-sm font-bold text-text-primary">{t(lang, 'ui.menu')}</span>
+          <button
+            onClick={() => setMobileNavOpen(false)}
+            class="p-1.5 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-surface-alt cursor-pointer"
+          >
+            <IconSvg name="x" size={18} />
+          </button>
+        </div>
+
+        {/* Nav items */}
+        <div class="flex-1 p-4 space-y-1">
+          {NAV_TAB_IDS.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => { handleTabClick(tab.id); setMobileNavOpen(false); }}
+              class={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${
+                (tab.id === 'skills' && activeView === 'skills') || (tab.id === 'workflows' && activeView === 'workflows')
+                  ? 'text-accent bg-accent-muted'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-surface-alt/80'
+              }`}
+            >
+              <IconSvg name={tab.icon} size={18} />
+              {NAV_TAB_KEYS[tab.id][lang]}
+            </button>
+          ))}
+        </div>
+
+        {/* Language toggle */}
+        <div class="p-4 border-t border-border/40">
+          <button
+            onClick={() => { handleLangToggle(); setMobileNavOpen(false); }}
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-surface-alt text-text-secondary hover:text-text-primary transition-all duration-200 cursor-pointer"
+          >
+            <IconSvg name="globe" size={16} />
+            {lang === 'cn' ? 'Switch to English' : '切换到中文'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   // --- Render ---
   return (
-    <div class="flex flex-col h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] overflow-hidden">
+    <div class="flex flex-col h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] overflow-x-hidden overflow-y-hidden">
 
       {/* Portal: render nav tabs into Base.astro nav bar */}
       {navSlot && createPortal(navTabs, navSlot)}
 
+      {/* Mobile nav drawer */}
+      {mobileNavDrawer}
+
       {/* ========== Scene Bar (Level 2 - full width) ========== */}
       {activeView === 'skills' && (
-        <div class="shrink-0 bg-surface/80 backdrop-blur-md border-b border-border/40 px-4 sm:px-6">
-          <div class="flex items-center gap-0 overflow-x-auto scroll-fade-x" style={{ scrollbarWidth: 'none' }}>
+        <div class="shrink-0 bg-surface/80 backdrop-blur-md border-b border-border/40 px-4 sm:px-6 overflow-x-hidden">
+          <div class="flex items-center gap-0 overflow-x-auto scroll-fade-x" style={{ scrollbarWidth: 'none', overscrollBehaviorX: 'contain', WebkitOverflowScrolling: 'touch' }}>
             {scenes.map(scene => (
               <button
                 key={scene.id}
@@ -606,8 +679,11 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
         {/* ===== Skills View ===== */}
         {activeView === 'skills' && (
           <>
-            {/* --- Fixed Top: Carousel + Setup Card --- */}
-            <div class="shrink-0 px-4 sm:px-6 pt-5 pb-4">
+            {/* --- Single scrollable area: Carousel + Search (sticky) + Content --- */}
+            <div class="flex-1 overflow-y-auto" ref={scrollRef}>
+
+            {/* --- Carousel + Setup Card (scrolls with content) --- */}
+            <div class="px-4 sm:px-6 pt-5 pb-4">
               <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {/* Featured Carousel */}
                 <div
@@ -695,8 +771,8 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
               </div>
             </div>
 
-            {/* --- Search Bar --- */}
-            <div class="shrink-0 bg-surface border-b border-border/40 px-4 sm:px-6 py-3">
+            {/* --- Search Bar (sticky within scroll container) --- */}
+            <div class="sticky top-0 z-10 bg-surface border-b border-border/40 px-4 sm:px-6 py-3">
               <div class="flex items-center gap-3">
                 <div class="relative flex-1">
                   <IconSvg name="search" size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary pointer-events-none" />
@@ -727,7 +803,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
 
               {/* Horizontal category quick-nav (only in grouped view with multiple categories) */}
               {isGroupedView && sceneCats.length > 1 && (
-                <div class="flex items-center gap-1.5 mt-3 overflow-x-auto scroll-fade-x pb-0.5" style={{ scrollbarWidth: 'none' }}>
+                <div class="flex items-center gap-1.5 mt-3 overflow-x-auto scroll-fade-x pb-0.5" style={{ scrollbarWidth: 'none', overscrollBehaviorX: 'contain' }}>
                   {sceneCats.map(cat => (
                     <button
                       key={cat.id}
@@ -746,9 +822,8 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
               )}
             </div>
 
-            {/* --- Scrollable Skills Content --- */}
-            <div class="flex-1 overflow-y-auto" ref={scrollRef}>
-              <div class="p-4 sm:p-6">
+            {/* --- Skills Content --- */}
+            <div class="p-4 sm:p-6">
                 {filteredSkills.length === 0 ? (
                   <div class="flex flex-col items-center justify-center py-20 text-text-tertiary">
                     <IconSvg name="search" size={32} className="mb-3 opacity-40" />

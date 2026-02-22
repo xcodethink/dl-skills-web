@@ -119,6 +119,15 @@
   -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
 }
 
+/* Mobile nav drawer slide-in animation */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in-right {
+  animation: slide-in-right 0.25s ease-out;
+}
+
 /* Language toggle — hide elements for non-active language */
 [data-lang="en"] [data-lang-cn] { display: none !important; }
 [data-lang="cn"] [data-lang-en] { display: none !important; }
