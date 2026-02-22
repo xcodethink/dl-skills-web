@@ -143,12 +143,12 @@ const websiteSchema = {
 </head>
 <body class="min-h-screen flex flex-col">
   <nav class="sticky top-0 z-50 bg-[--color-surface-glass] backdrop-blur-xl backdrop-saturate-150 border-b border-border/40">
-    <div class:list={[workspace ? 'px-8' : 'max-w-6xl mx-auto px-8', 'h-16 flex items-center justify-between']}>
+    <div class:list={[workspace ? 'px-4 sm:px-8' : 'max-w-6xl mx-auto px-4 sm:px-8', 'h-14 md:h-16 flex items-center justify-between']}>
       <a href="/" class="shrink-0 font-bold text-lg bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent hover:from-violet-500 hover:to-blue-500 transition-all duration-300">
         Claude Code Skills
       </a>
 
-      {workspace && <div id="workspace-nav-slot" class="flex-1 flex items-center justify-center" />}
+      {workspace && <div id="workspace-nav-slot" class="flex-1 flex items-center justify-center min-w-0" />}
 
       <div class="flex items-center gap-1">
         {!workspace && navItems.map(item => (
@@ -194,9 +194,9 @@ const websiteSchema = {
   </main>
 
   {!workspace && <footer class="border-t border-border/40 mt-24">
-    <div class="max-w-6xl mx-auto px-8 py-14">
-      <div class="flex items-center justify-between">
-        <div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-8 py-14">
+      <div class="flex flex-col sm:flex-row items-center sm:justify-between gap-4">
+        <div class="text-center sm:text-left">
           <span class="font-bold text-lg bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
             Claude Code Skills
           </span>

@@ -267,6 +267,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
   const [navSlot, setNavSlot] = useState<HTMLElement | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef(0);
 
   // Find portal target after mount
   useEffect(() => {
@@ -451,22 +452,22 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
 
   // --- Nav Tabs (rendered via portal into Base.astro nav bar) ---
   const navTabs = (
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-0.5 md:gap-1">
       {NAV_TAB_IDS.map(tab => (
         <button
           key={tab.id}
           onClick={() => handleTabClick(tab.id)}
-          class={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${
+          class={`flex items-center gap-1.5 px-2.5 md:px-4 py-1.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${
             (tab.id === 'skills' && activeView === 'skills') || (tab.id === 'workflows' && activeView === 'workflows')
               ? 'text-accent bg-accent-muted'
               : 'text-text-secondary hover:text-text-primary hover:bg-surface-alt/80'
           }`}
         >
           <IconSvg name={tab.icon} size={14} />
-          {NAV_TAB_KEYS[tab.id][lang]}
+          <span class="hidden md:inline">{NAV_TAB_KEYS[tab.id][lang]}</span>
         </button>
       ))}
-      <div class="w-px h-4 bg-border/40 mx-1" />
+      <div class="hidden md:block w-px h-4 bg-border/40 mx-1" />
       <button
         onClick={handleLangToggle}
         class="px-2 py-1.5 rounded-xl text-xs font-semibold text-text-tertiary hover:text-text-primary hover:bg-surface-alt/80 transition-all duration-200 cursor-pointer"
@@ -478,15 +479,15 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
 
   // --- Render ---
   return (
-    <div class="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+    <div class="flex flex-col h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] overflow-hidden">
 
       {/* Portal: render nav tabs into Base.astro nav bar */}
       {navSlot && createPortal(navTabs, navSlot)}
 
       {/* ========== Scene Bar (Level 2 - full width) ========== */}
       {activeView === 'skills' && (
-        <div class="shrink-0 bg-surface/80 backdrop-blur-md border-b border-border/40 px-6">
-          <div class="flex items-center gap-0 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+        <div class="shrink-0 bg-surface/80 backdrop-blur-md border-b border-border/40 px-4 sm:px-6">
+          <div class="flex items-center gap-0 overflow-x-auto scroll-fade-x" style={{ scrollbarWidth: 'none' }}>
             {scenes.map(scene => (
               <button
                 key={scene.id}
@@ -606,10 +607,21 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
         {activeView === 'skills' && (
           <>
             {/* --- Fixed Top: Carousel + Setup Card --- */}
-            <div class="shrink-0 px-6 pt-5 pb-4">
+            <div class="shrink-0 px-4 sm:px-6 pt-5 pb-4">
               <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {/* Featured Carousel */}
-                <div class="md:col-span-3 relative rounded-2xl overflow-hidden bg-gradient-to-br from-violet-500/10 via-indigo-500/8 to-blue-500/5 border border-border/60 h-[150px]">
+                <div
+                  class="md:col-span-3 relative rounded-2xl overflow-hidden bg-gradient-to-br from-violet-500/10 via-indigo-500/8 to-blue-500/5 border border-border/60 h-[140px] sm:h-[150px]"
+                  onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+                  onTouchEnd={(e) => {
+                    const diff = touchStartX.current - e.changedTouches[0].clientX;
+                    if (Math.abs(diff) > 50) {
+                      setCarouselIdx(i => diff > 0
+                        ? (i + 1) % featured.length
+                        : (i - 1 + featured.length) % featured.length);
+                    }
+                  }}
+                >
                   <div class="absolute inset-0 pointer-events-none">
                     <div class="absolute top-0 left-1/4 w-48 h-48 bg-violet-400/15 rounded-full blur-3xl" />
                     <div class="absolute bottom-0 right-1/4 w-40 h-40 bg-blue-400/10 rounded-full blur-3xl" />
@@ -643,8 +655,8 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
                         <button
                           key={i}
                           onClick={() => setCarouselIdx(i)}
-                          class={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                            i === carouselIdx ? 'bg-accent w-4' : 'bg-text-tertiary/40 hover:bg-text-tertiary/60 w-1.5'
+                          class={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                            i === carouselIdx ? 'bg-accent w-5' : 'bg-text-tertiary/40 hover:bg-text-tertiary/60 w-2'
                           }`}
                         />
                       ))}
@@ -653,7 +665,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
                 </div>
 
                 {/* Quick Setup Card */}
-                <div class="md:col-span-2 rounded-2xl border border-border/60 bg-surface p-4 flex flex-col justify-between relative overflow-hidden h-[150px]">
+                <div class="md:col-span-2 rounded-2xl border border-border/60 bg-surface p-4 flex flex-col justify-between relative overflow-hidden h-[140px] sm:h-[150px]">
                   <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-accent/5 to-transparent rounded-bl-3xl pointer-events-none" />
                   <div class="relative">
                     <div class="flex items-center justify-between mb-2">
@@ -684,7 +696,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
             </div>
 
             {/* --- Search Bar --- */}
-            <div class="shrink-0 bg-surface border-b border-border/40 px-6 py-3">
+            <div class="shrink-0 bg-surface border-b border-border/40 px-4 sm:px-6 py-3">
               <div class="flex items-center gap-3">
                 <div class="relative flex-1">
                   <IconSvg name="search" size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary pointer-events-none" />
@@ -694,14 +706,14 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
                     value={searchQuery}
                     onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
                     placeholder={t(lang, 'ui.search')}
-                    class="w-full pl-9 pr-4 py-2 bg-surface-alt/60 border border-border/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-all duration-200 placeholder:text-text-tertiary"
+                    class="w-full pl-9 pr-4 py-2.5 bg-surface-alt/60 border border-border/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-all duration-200 placeholder:text-text-tertiary"
                   />
                 </div>
                 {/* Mobile category dropdown */}
                 <select
                   value={selectedCategory || ''}
                   onChange={(e) => pickCategory((e.target as HTMLSelectElement).value || null)}
-                  class="lg:hidden px-3 py-2 border border-border/60 rounded-xl text-xs bg-surface"
+                  class="lg:hidden px-3 py-2.5 border border-border/60 rounded-xl text-sm bg-surface-alt"
                 >
                   <option value="">{t(lang, 'ui.all')}</option>
                   {sceneCats.map(c => (
@@ -715,12 +727,12 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
 
               {/* Horizontal category quick-nav (only in grouped view with multiple categories) */}
               {isGroupedView && sceneCats.length > 1 && (
-                <div class="flex items-center gap-1.5 mt-3 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }}>
+                <div class="flex items-center gap-1.5 mt-3 overflow-x-auto scroll-fade-x pb-0.5" style={{ scrollbarWidth: 'none' }}>
                   {sceneCats.map(cat => (
                     <button
                       key={cat.id}
                       onClick={() => scrollToSection(cat.id)}
-                      class={`shrink-0 px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                      class={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer whitespace-nowrap ${
                         activeSectionId === cat.id
                           ? 'bg-accent text-white shadow-sm shadow-accent/20'
                           : 'bg-surface-alt text-text-secondary hover:text-text-primary hover:bg-surface-alt/80'
@@ -736,7 +748,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
 
             {/* --- Scrollable Skills Content --- */}
             <div class="flex-1 overflow-y-auto" ref={scrollRef}>
-              <div class="p-6">
+              <div class="p-4 sm:p-6">
                 {filteredSkills.length === 0 ? (
                   <div class="flex flex-col items-center justify-center py-20 text-text-tertiary">
                     <IconSvg name="search" size={32} className="mb-3 opacity-40" />
@@ -784,7 +796,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
         {/* ===== Workflows View ===== */}
         {activeView === 'workflows' && (
           <div class="flex-1 overflow-y-auto" ref={scrollRef}>
-            <div class="p-6">
+            <div class="p-4 sm:p-6">
               <div class="mb-8">
                 <h1 class="text-xl font-bold text-text-primary">{t(lang, 'wf.title')}</h1>
                 <p class="text-sm text-text-secondary mt-1">
@@ -904,7 +916,7 @@ function WorkflowCard({ workflow, lang }: { workflow: WorkflowSummary; lang: Lan
       </div>
 
       <div class="px-5 pb-4">
-        <div class="flex items-center gap-1 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+        <div class="flex items-center gap-1 overflow-x-auto scroll-fade-x" style={{ scrollbarWidth: 'none' }}>
           {workflow.steps.map((step, i) => (
             <div key={step.id} class="flex items-center shrink-0">
               {i > 0 && (

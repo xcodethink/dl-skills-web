@@ -61,7 +61,7 @@ const howToSchema = {
   ]}
   structuredData={howToSchema}
 >
-  <div class="max-w-5xl mx-auto px-8 py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-8 py-16">
     <a href="/#workflows" class="text-sm text-text-tertiary hover:text-accent transition-colors duration-200">
       <Icon name="arrow-left" size={14} class="inline mr-1" />
       <span data-lang-cn>返回工作流列表</span>
@@ -75,7 +75,7 @@ const howToSchema = {
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-3xl font-extrabold tracking-tight text-text-primary">
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
             <span data-lang-cn>{workflow.name_cn}</span>
             <span data-lang-en>{workflow.name_en || workflow.name_cn}</span>
           </h1>

@@ -113,6 +113,12 @@
 .dark .prose th { background: #292524; border-color: #44403C; }
 .dark .prose td { border-color: #44403C; }
 
+/* Horizontal scroll fade indicator */
+.scroll-fade-x {
+  mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+}
+
 /* Language toggle — hide elements for non-active language */
 [data-lang="en"] [data-lang-cn] { display: none !important; }
 [data-lang="cn"] [data-lang-en] { display: none !important; }
