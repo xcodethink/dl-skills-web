@@ -1,0 +1,82 @@
+---
+import Base from '../../layouts/Base.astro';
+import SkillCard from '../../components/SkillCard.astro';
+import Icon from '../../components/Icon.astro';
+import { getSkillsBySource } from '../../lib/skills';
+
+const SOURCE_DATA: Record<string, { name: string; desc_cn: string; desc_en: string; url: string }> = {
+  superpowers: { name: 'Superpowers', desc_cn: '开发纪律方法论', desc_en: 'Dev Discipline', url: 'https://github.com/obra/superpowers' },
+  claudekit: { name: 'ClaudeKit', desc_cn: '综合技能集', desc_en: 'Comprehensive Skills', url: 'https://github.com/mrgoonie/claudekit-skills' },
+  'bear2u-skills': { name: 'Bear2u Skills', desc_cn: '实战脚手架', desc_en: 'Practical Scaffolding', url: 'https://github.com/bear2u/my-skills' },
+  composio: { name: 'Composio', desc_cn: '集成自动化', desc_en: 'Integration Automation', url: 'https://github.com/ComposioHQ/awesome-claude-skills' },
+  dataviz: { name: 'DataViz', desc_cn: '数据可视化', desc_en: 'Data Visualization', url: 'https://github.com/K-Dense-AI/claude-scientific-skills' },
+};
+
+export function getStaticPaths() {
+  const sources = ['superpowers', 'claudekit', 'bear2u-skills', 'composio', 'dataviz'];
+  return sources.map(id => ({
+    params: { source: id },
+  }));
+}
+
+const { source } = Astro.params;
+const info = SOURCE_DATA[source!] || { name: source, desc_cn: '', desc_en: '', url: '' };
+const skills = getSkillsBySource(source!, 'cn');
+
+const grouped = skills.reduce((acc, skill) => {
+  const cat = skill.originalCategory || 'Other';
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(skill);
+  return acc;
+}, {} as Record<string, typeof skills>);
+---
+
+<Base title={info.name} description={info.desc_en}>
+  <div class="max-w-6xl mx-auto px-8 py-16">
+    <a href="/sources" class="text-sm text-text-tertiary hover:text-accent transition-colors duration-200">
+      <Icon name="arrow-left" size={14} class="inline mr-1" />
+      <span data-lang-cn>返回来源列表</span>
+      <span data-lang-en>Back to sources</span>
+    </a>
+
+    <div class="mt-8">
+      <h1 class="text-3xl font-extrabold tracking-tight text-text-primary">{info.name}</h1>
+      <p class="text-sm text-text-secondary mt-1.5">
+        <span data-lang-cn>{info.desc_cn}</span>
+        <span data-lang-en>{info.desc_en}</span>
+      </p>
+      <div class="flex items-center gap-3 mt-3 text-sm text-text-tertiary">
+        {info.url && (
+          <a href={info.url} target="_blank" rel="noopener" class="text-accent hover:text-accent-hover transition-colors duration-200">
+            GitHub
+            <Icon name="external-link" size={12} class="inline ml-0.5" />
+          </a>
+        )}
+        <span>
+          <span data-lang-cn>{skills.length} 个技能</span>
+          <span data-lang-en>{skills.length} skills</span>
+        </span>
+      </div>
+    </div>
+
+    {Object.entries(grouped).sort().map(([category, catSkills]) => (
+      <section class="mt-12">
+        <h2 class="text-lg font-semibold text-text-primary mb-6">{category}</h2>
+        <div class="grid sm:grid-cols-2 gap-6">
+          {catSkills.map(skill => (
+            <SkillCard
+              title={skill.title}
+              source={skill.source}
+              highlight={skill.highlight}
+              verified={skill.verified}
+              type={skill.type}
+              difficulty={skill.difficulty}
+              tags={skill.tags}
+              href={`/skills/${skill.source}/${skill.slug}`}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Base>

@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary — Violet */
+  --color-accent: #8B5CF6;
+  --color-accent-hover: #7C3AED;
+  --color-accent-light: #A78BFA;
+  --color-accent-muted: rgba(139, 92, 246, 0.08);
+
+  /* Gradient endpoints */
+  --color-gradient-from: #8B5CF6;
+  --color-gradient-via: #6366F1;
+  --color-gradient-to: #3B82F6;
+
+  /* Warm surfaces */
+  --color-surface: #FEFDFB;
+  --color-surface-alt: #F7F5F2;
+  --color-surface-glass: rgba(254, 253, 251, 0.72);
+
+  /* Stone neutrals */
+  --color-text-primary: #1C1917;
+  --color-text-secondary: #57534E;
+  --color-text-tertiary: #A8A29E;
+  --color-border: #E7E5E4;
+  --color-border-hover: #D6D3D1;
+
+  /* Semantic */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+  }
+
+  .dark {
+    --color-surface: #0C0A09;
+    --color-surface-alt: #1C1917;
+    --color-surface-glass: rgba(12, 10, 9, 0.72);
+    --color-text-primary: #FAFAF9;
+    --color-text-secondary: #A8A29E;
+    --color-text-tertiary: #57534E;
+    --color-border: #292524;
+    --color-border-hover: #44403C;
+    --color-accent-muted: rgba(139, 92, 246, 0.15);
+  }
+
+  .dark body {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+  }
+}
+
+/* Gradient button utility */
+@layer components {
+  .btn-gradient {
+    background: linear-gradient(135deg, var(--color-gradient-from), var(--color-gradient-to));
+    color: white;
+    border-radius: 0.75rem;
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 300ms;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+  }
+  .btn-gradient:hover {
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+    transform: translateY(-1px);
+  }
+}
+
+/* Markdown content */
+.prose { font-size: 0.9375rem; line-height: 1.75; color: var(--color-text-primary); }
+.prose h1 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem; line-height: 1.25; }
+.prose h2 { font-size: 1.375rem; font-weight: 700; margin: 2rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border); line-height: 1.35; }
+.prose h3 { font-size: 1.125rem; font-weight: 600; margin: 1.25rem 0 0.5rem; line-height: 1.35; }
+.prose h4 { font-size: 1rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+.prose p { margin: 0.75rem 0; }
+.prose ul { margin: 0.75rem 0; padding-left: 1.5rem; list-style: disc; }
+.prose ol { margin: 0.75rem 0; padding-left: 1.5rem; list-style: decimal; }
+.prose li { margin: 0.25rem 0; }
+.prose blockquote { padding: 1rem 1.25rem; border-left: 3px solid var(--color-accent); background: linear-gradient(to right, rgba(139, 92, 246, 0.04), transparent); border-radius: 0 8px 8px 0; color: var(--color-text-secondary); font-style: italic; margin: 1.25rem 0; }
+.prose code { font-size: 0.8125rem; font-family: "JetBrains Mono", ui-monospace, monospace; background: var(--color-surface-alt); padding: 0.15rem 0.5rem; border-radius: 6px; border: 1px solid var(--color-border); }
+.prose pre { margin: 1.25rem 0; padding: 1.25rem; background: #1C1917; color: #FAFAF9; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); overflow-x: auto; font-size: 0.8125rem; line-height: 1.7; }
+.prose pre code { background: transparent; padding: 0; border: none; }
+.prose table { width: 100%; margin: 1.25rem 0; font-size: 0.8125rem; border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border); }
+.prose th { text-align: left; padding: 0.75rem; background: var(--color-surface-alt); font-weight: 600; border-bottom: 1px solid var(--color-border); }
+.prose td { padding: 0.75rem; border-bottom: 1px solid var(--color-border); }
+.prose a { color: var(--color-accent); text-decoration: none; text-underline-offset: 3px; font-weight: 500; transition: all 200ms; }
+.prose a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+.prose hr { margin: 1.5rem 0; border-color: var(--color-border); }
+.prose strong { font-weight: 600; }
+.dark .prose pre { background: #1C1917; border-color: rgba(255, 255, 255, 0.08); }
+.dark .prose code { background: #292524; border-color: #44403C; }
+.dark .prose th { background: #292524; border-color: #44403C; }
+.dark .prose td { border-color: #44403C; }
+
+/* Language toggle — hide elements for non-active language */
+[data-lang="en"] [data-lang-cn] { display: none !important; }
+[data-lang="cn"] [data-lang-en] { display: none !important; }
+/* Default: show cn when no data-lang is set yet */
+:root:not([data-lang]) [data-lang-en] { display: none !important; }

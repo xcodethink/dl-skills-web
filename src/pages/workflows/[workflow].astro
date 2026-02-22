@@ -1,0 +1,185 @@
+---
+import Base from '../../layouts/Base.astro';
+import CopyButton from '../../components/CopyButton.tsx';
+import Icon from '../../components/Icon.astro';
+import { getWorkflowsWithSkills } from '../../lib/skills';
+
+export function getStaticPaths() {
+  const workflows = getWorkflowsWithSkills('cn');
+  return workflows.map(wf => ({
+    params: { workflow: wf.id },
+    props: { workflow: wf },
+  }));
+}
+
+const { workflow } = Astro.props;
+
+const allContent = workflow.steps
+  .flatMap(step => step.resolvedSkills?.map(s => s.rawContent) || [])
+  .join('\n\n---\n\n');
+
+const modeLabels_cn: Record<string, string> = {
+  solo: 'Solo',
+  multi: '多人协作',
+  'solo-or-multi': '可多人',
+};
+const modeLabels_en: Record<string, string> = {
+  solo: 'Solo',
+  multi: 'Multi-Agent',
+  'solo-or-multi': 'Solo or Multi',
+};
+
+const skillCount = workflow.steps.flatMap(s => s.resolvedSkills || []).length;
+---
+
+<Base title={workflow.name_cn} description={workflow.description_cn}>
+  <div class="max-w-5xl mx-auto px-8 py-16">
+    <a href="/#workflows" class="text-sm text-text-tertiary hover:text-accent transition-colors duration-200">
+      <Icon name="arrow-left" size={14} class="inline mr-1" />
+      <span data-lang-cn>返回工作流列表</span>
+      <span data-lang-en>Back to workflows</span>
+    </a>
+
+    <!-- Header -->
+    <div class="mt-8 flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center text-text-secondary">
+        <Icon name={workflow.icon} size={22} />
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-3xl font-extrabold tracking-tight text-text-primary">
+            <span data-lang-cn>{workflow.name_cn}</span>
+            <span data-lang-en>{workflow.name_en || workflow.name_cn}</span>
+          </h1>
+          <span class={`text-xs px-2 py-0.5 rounded-full ${
+            workflow.coverage === 'full'
+              ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'
+              : 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400'
+          }`}>
+            <span data-lang-cn>{workflow.coverage === 'full' ? '完整覆盖' : '部分覆盖'}</span>
+            <span data-lang-en>{workflow.coverage === 'full' ? 'Full Coverage' : 'Partial'}</span>
+          </span>
+        </div>
+        <p class="text-sm text-text-secondary mt-1.5">
+          <span data-lang-cn>{workflow.description_cn}</span>
+          <span data-lang-en>{workflow.description_en || workflow.description_cn}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Entry / Exit -->
+    <div class="mt-8 grid sm:grid-cols-2 gap-4">
+      <div class="p-5 rounded-xl bg-gradient-to-r from-accent/5 to-transparent border-l-4 border-accent">
+        <p class="text-xs text-text-tertiary font-medium mb-1.5">
+          <span data-lang-cn>入口条件</span>
+          <span data-lang-en>Entry Condition</span>
+        </p>
+        <p class="text-sm text-text-primary">
+          <span data-lang-cn>{workflow.entry_cn}</span>
+          <span data-lang-en>{workflow.entry_en || workflow.entry_cn}</span>
+        </p>
+      </div>
+      <div class="p-5 rounded-xl bg-gradient-to-r from-emerald-500/5 to-transparent border-l-4 border-emerald-500">
+        <p class="text-xs text-text-tertiary font-medium mb-1.5">
+          <span data-lang-cn>交付物</span>
+          <span data-lang-en>Deliverables</span>
+        </p>
+        <p class="text-sm text-text-primary">
+          <span data-lang-cn>{workflow.exit_cn}</span>
+          <span data-lang-en>{workflow.exit_en || workflow.exit_cn}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Copy All -->
+    <div class="mt-8">
+      <CopyButton
+        client:idle
+        text={allContent}
+        label={`Copy all ${skillCount} skills`}
+        variant="primary"
+      />
+    </div>
+
+    <!-- Steps -->
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-8">
+        <span data-lang-cn>{workflow.steps.length} 个步骤</span>
+        <span data-lang-en>{workflow.steps.length} Steps</span>
+      </h2>
+
+      <div class="space-y-5">
+        {workflow.steps.map((step, i) => (
+          <div class="relative">
+            {i < workflow.steps.length - 1 && (
+              <div class="absolute left-5 top-[calc(100%)] w-px h-5 bg-gradient-to-b from-border to-transparent" />
+            )}
+
+            <div class="p-6 rounded-2xl border border-border/60 hover:border-accent/20 transition-colors duration-300">
+              <div class="flex items-center gap-3">
+                <span class="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 text-accent text-sm font-semibold flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-base font-semibold text-text-primary">
+                      <span data-lang-cn>{step.name_cn}</span>
+                      <span data-lang-en>{step.name_en || step.name_cn}</span>
+                    </h3>
+                    <span class={`text-xs px-2 py-0.5 rounded-full ${
+                      step.mode === 'multi' || step.mode === 'solo-or-multi'
+                        ? 'bg-accent-muted text-accent'
+                        : 'bg-surface-alt text-text-tertiary'
+                    }`}>
+                      <span data-lang-cn>{modeLabels_cn[step.mode]}</span>
+                      <span data-lang-en>{modeLabels_en[step.mode]}</span>
+                    </span>
+                  </div>
+                  <p class="text-sm text-text-secondary mt-0.5">
+                    <span data-lang-cn>{step.description_cn}</span>
+                    <span data-lang-en>{step.description_en || step.description_cn}</span>
+                  </p>
+                </div>
+              </div>
+
+              {step.resolvedSkills && step.resolvedSkills.length > 0 && (
+                <div class="mt-5 flex flex-wrap gap-2">
+                  {step.resolvedSkills.map(skill => (
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-alt border border-border/60">
+                      <a href={`/skills/${skill.source}/${skill.slug}`} class="text-sm text-text-primary hover:text-accent transition-colors duration-200">
+                        {skill.title}
+                      </a>
+                      <CopyButton client:idle text={skill.rawContent} label="Copy" variant="secondary" />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div class="mt-5">
+                <p class="text-xs font-medium text-text-secondary mb-1.5">
+                  <span data-lang-cn>质量标准</span>
+                  <span data-lang-en>Quality Criteria</span>
+                </p>
+                <div class="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
+                  <span data-lang-cn>{step.quality_cn.trim()}</span>
+                  <span data-lang-en>{(step.quality_en || step.quality_cn).trim()}</span>
+                </div>
+              </div>
+
+              <div class="mt-4 p-4 rounded-xl bg-gradient-to-r from-accent/5 to-transparent border border-accent/10">
+                <p class="text-xs font-medium text-accent mb-1">
+                  <span data-lang-cn>验证门</span>
+                  <span data-lang-en>Verification Gate</span>
+                </p>
+                <p class="text-sm text-text-secondary">
+                  <span data-lang-cn>{step.verification_cn}</span>
+                  <span data-lang-en>{step.verification_en || step.verification_cn}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>

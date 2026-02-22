@@ -1,0 +1,173 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CopyButton from '../../../components/CopyButton.tsx';
+import SkillCard from '../../../components/SkillCard.astro';
+import Icon from '../../../components/Icon.astro';
+import { getAllSkills, getRelatedSkills, loadWorkflows } from '../../../lib/skills';
+import { marked } from 'marked';
+
+export function getStaticPaths() {
+  const skills = getAllSkills();
+  return skills.map(skill => ({
+    params: { source: skill.source, slug: skill.slug },
+    props: { skill },
+  }));
+}
+
+const { skill } = Astro.props;
+const lang = skill.language;
+const related = getRelatedSkills(skill, 3);
+
+const allWorkflows = loadWorkflows();
+const containingWorkflows = allWorkflows.filter(wf =>
+  wf.steps.some(step => step.skills.includes(skill.id))
+);
+
+// Find paired skill for language switch link
+const pairedSkill = skill.pairedId ? getAllSkills().find(s => s.id === skill.pairedId) : undefined;
+
+const typeLabels_cn: Record<string, string> = { discipline: '纪律型', tool: '工具型', process: '流程型', reference: '参考型' };
+const typeLabels_en: Record<string, string> = { discipline: 'Discipline', tool: 'Tool', process: 'Process', reference: 'Reference' };
+const diffLabels_cn: Record<string, string> = { starter: '入门', intermediate: '中级', advanced: '高级' };
+const diffLabels_en: Record<string, string> = { starter: 'Starter', intermediate: 'Intermediate', advanced: 'Advanced' };
+
+function getCleanContent(raw: string): string {
+  let content = raw;
+  content = content.replace(/^>\s*来源：.*$/m, '');
+  content = content.replace(/^>\s*Source:.*$/im, '');
+  content = content.replace(/^---[\s\S]*?---\n*/m, '');
+  return content.trim();
+}
+
+const cleanContent = getCleanContent(skill.rawContent);
+const htmlContent = await marked.parse(cleanContent);
+---
+
+<Base
+  title={skill.title}
+  description={`${skill.title} — ${skill.highlight || 'Claude Code Skill'}`}
+  keywords={`claude code, ${skill.tags.join(', ')}, ai skills`}
+  lang={lang}
+>
+  <div class="max-w-5xl mx-auto px-8 py-16">
+    <div class="flex items-center justify-between">
+      <a href={`/#${skill.unifiedCategory}`} class="text-sm text-text-tertiary hover:text-accent transition-colors duration-200">
+        <Icon name="arrow-left" size={14} class="inline mr-1" />
+        <span data-lang-cn>返回</span>
+        <span data-lang-en>Back</span>
+      </a>
+      {pairedSkill && (
+        <a
+          href={`/skills/${pairedSkill.source}/${pairedSkill.slug}`}
+          class="text-sm text-accent hover:text-accent-hover transition-colors duration-200"
+        >
+          {lang === 'cn' ? 'English Version →' : '中文版 →'}
+        </a>
+      )}
+    </div>
+
+    <!-- Title & Meta -->
+    <div class="mt-8">
+      <h1 class="text-3xl font-extrabold tracking-tight text-text-primary">{skill.title}</h1>
+
+      <div class="flex flex-wrap items-center gap-2 mt-4">
+        {skill.verified && (
+          <span class="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 font-medium">
+            Verified
+          </span>
+        )}
+        <span class="text-xs px-2 py-0.5 rounded-full bg-surface-alt text-text-secondary">
+          <span data-lang-cn>{diffLabels_cn[skill.difficulty] || skill.difficulty}</span>
+          <span data-lang-en>{diffLabels_en[skill.difficulty] || skill.difficulty}</span>
+        </span>
+        <span class="text-xs px-2 py-0.5 rounded-full bg-surface-alt text-text-secondary">
+          <span data-lang-cn>{typeLabels_cn[skill.type] || skill.type}</span>
+          <span data-lang-en>{typeLabels_en[skill.type] || skill.type}</span>
+        </span>
+        {skill.compatibleWith.map(tool => (
+          <span class="text-xs px-2 py-0.5 rounded-full bg-accent-muted text-accent">
+            {tool}
+          </span>
+        ))}
+      </div>
+
+      <div class="flex items-center gap-2 mt-3 text-xs text-text-tertiary">
+        <span>{skill.estimatedReadMinutes} min read</span>
+        <span class="text-text-tertiary">·</span>
+        <span>{skill.lineCount} lines</span>
+      </div>
+
+      {skill.highlight && (
+        <div class="mt-5 p-5 rounded-xl bg-gradient-to-r from-accent/5 to-transparent border-l-4 border-accent">
+          <p class="text-sm text-text-secondary leading-relaxed">{skill.highlight}</p>
+        </div>
+      )}
+    </div>
+
+    <!-- Copy Buttons -->
+    <div class="flex items-center gap-3 mt-8">
+      <CopyButton
+        client:idle
+        text={skill.rawContent}
+        label={lang === 'cn' ? '复制完整技能' : 'Copy Full Skill'}
+        variant="primary"
+      />
+      <CopyButton
+        client:idle
+        text={cleanContent}
+        label={lang === 'cn' ? '复制正文' : 'Copy Content'}
+        variant="secondary"
+      />
+    </div>
+
+    <!-- Content -->
+    <article class="prose mt-12 max-w-none" set:html={htmlContent} />
+
+    <!-- Containing Workflows -->
+    {containingWorkflows.length > 0 && (
+      <section class="mt-14">
+        <div class="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8" />
+        <h2 class="text-lg font-semibold text-text-primary mb-5">
+          <span data-lang-cn>包含此技能的工作流</span>
+          <span data-lang-en>Workflows containing this skill</span>
+        </h2>
+        <div class="flex flex-wrap gap-3">
+          {containingWorkflows.map(wf => (
+            <a
+              href={`/workflows/${wf.id}`}
+              class="px-4 py-2.5 rounded-xl border border-border/60 hover:border-accent/30 hover:shadow-md hover:shadow-accent/5 text-sm text-text-secondary hover:text-accent transition-all duration-300"
+            >
+              <span data-lang-cn>{wf.name_cn}</span>
+              <span data-lang-en>{wf.name_en}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Related Skills -->
+    {related.length > 0 && (
+      <section class="mt-10">
+        <div class="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8" />
+        <h2 class="text-lg font-semibold text-text-primary mb-5">
+          <span data-lang-cn>相关技能</span>
+          <span data-lang-en>Related Skills</span>
+        </h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {related.map(s => (
+            <SkillCard
+              title={s.title}
+              source={s.source}
+              highlight={s.highlight}
+              verified={s.verified}
+              type={s.type}
+              difficulty={s.difficulty}
+              tags={s.tags}
+              href={`/skills/${s.source}/${s.slug}`}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</Base>

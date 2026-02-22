@@ -1,0 +1,76 @@
+bundles:
+  - id: new-project
+    name_cn: 启动新项目
+    name_en: Start a New Project
+    icon: "rocket"
+    description_cn: 从零开始一个项目？这套组合帮你建立正确的开发纪律
+    description_en: Starting from scratch? This bundle establishes the right development discipline
+    skills:
+      - superpowers/A-开发方法论/01-测试驱动开发-TDD
+      - superpowers/E-Git工作流/01-Git-Worktree工作流
+      - bear2u-skills/A-项目初始化/01-全栈项目生成器
+    why_cn: TDD 保证代码质量，Git Worktree 隔离工作流，项目生成器快速搭建骨架
+    why_en: TDD ensures code quality, Git Worktree isolates workflows, generator scaffolds quickly
+
+  - id: debug-session
+    name_cn: 系统化调试
+    name_en: Systematic Debugging
+    icon: "mag"
+    description_cn: 遇到 bug 别慌，这套组合帮你科学定位根因
+    description_en: Don't panic when bugs hit — this bundle helps you systematically find root causes
+    skills:
+      - superpowers/A-开发方法论/02-系统化调试
+      - superpowers/A-开发方法论/03-完成前验证
+    why_cn: 先用调试方法定位根因，再用验证方法确保修复完整
+    why_en: First locate root cause with debugging, then verify fix completeness
+
+  - id: code-review
+    name_cn: 代码评审
+    name_en: Code Review
+    icon: "clipboard"
+    description_cn: 让 AI 给你做严格的、有套路的代码评审
+    description_en: Get rigorous, structured code reviews from AI
+    skills:
+      - superpowers/C-代码评审/01-请求代码评审
+      - superpowers/C-代码评审/02-接收代码评审
+    why_cn: 一个发起评审请求，一个指导如何处理评审反馈
+    why_en: One initiates review requests, the other guides handling review feedback
+
+  - id: ai-agent
+    name_cn: Agent 开发
+    name_en: Agent Development
+    icon: "robot"
+    description_cn: 开发多 Agent 系统的完整方法论
+    description_en: Complete methodology for developing multi-agent systems
+    skills:
+      - superpowers/D-Agent编排/01-并行子任务调度
+      - superpowers/D-Agent编排/02-子Agent驱动开发
+      - bear2u-skills/C-AI工程与提示词/03-MCP服务器构建器
+    why_cn: 并行调度提效，子 Agent 解耦，MCP 标准化接口
+    why_en: Parallel dispatch for efficiency, sub-agent decoupling, MCP for standard interfaces
+
+  - id: frontend-project
+    name_cn: 前端项目
+    name_en: Frontend Project
+    icon: "art"
+    description_cn: 前端项目从设计到组件的完整工作流
+    description_en: Complete frontend workflow from design to components
+    skills:
+      - bear2u-skills/B-设计与UI/01-设计提示词生成器
+      - claudekit/B-前端开发/01-React-Next.js全栈开发
+      - claudekit/B-前端开发/02-Vue-Nuxt全栈开发
+    why_cn: 先用设计生成器出方案，再按框架技能落地
+    why_en: Generate design with prompt generator, then implement with framework skills
+
+  - id: content-creation
+    name_cn: 内容创作
+    name_en: Content Creation
+    icon: "memo"
+    description_cn: 高质量内容生产的完整工具链
+    description_en: Complete toolchain for high-quality content production
+    skills:
+      - bear2u-skills/D-内容与文档/01-博客文章生成器
+      - composio/B-设计与内容/02-品牌设计与素材生成
+      - composio/C-营销与商业/01-SEO关键词研究与优化
+    why_cn: 博客生成内容，品牌工具统一视觉，SEO 确保被发现
+    why_en: Blog generator for content, brand tools for visuals, SEO for discoverability

@@ -1,0 +1,395 @@
+workflows:
+  - id: new-project
+    name_cn: 从零开发新项目
+    name_en: Build a New Project
+    description_cn: 完整的项目开发流程，从构思到交付，每一步都有验证标准
+    description_en: Complete development workflow from ideation to delivery, with verification at every step
+    icon: rocket
+    coverage: full
+    entry_cn: 你有一个项目想法或需求
+    entry_en: You have a project idea or requirement
+    exit_cn: 代码完成，测试通过，评审通过，可以部署
+    exit_en: Code complete, tests pass, review approved, ready to deploy
+    steps:
+      - id: ideate
+        name_cn: 构思
+        name_en: Ideate
+        mode: solo
+        description_cn: 将模糊想法转化为结构化的需求和设计方案
+        description_en: Transform vague ideas into structured requirements and design proposals
+        skills:
+          - superpowers/B-项目规划与执行/01-头脑风暴
+        quality_cn: |
+          - 产出完整的需求文档
+          - 列出所有功能点和优先级
+          - 明确技术选型和约束条件
+        quality_en: |
+          - Produce complete requirements document
+          - List all features with priorities
+          - Define tech stack and constraints
+        verification_cn: 需求文档是否覆盖了用户提到的所有功能点？是否有遗漏？
+        verification_en: Does the requirements doc cover all mentioned features? Any gaps?
+
+      - id: plan
+        name_cn: 规划
+        name_en: Plan
+        mode: solo
+        description_cn: 将需求拆解为可执行的分步实施计划
+        description_en: Break down requirements into executable step-by-step implementation plan
+        skills:
+          - superpowers/B-项目规划与执行/02-编写实施计划
+        quality_cn: |
+          - 计划分步清晰，每步可独立执行
+          - 每步包含验证标准
+          - 估算复杂度和依赖关系
+        quality_en: |
+          - Plan is clear with independently executable steps
+          - Each step includes verification criteria
+          - Complexity and dependencies estimated
+        verification_cn: 计划的每一步是否都有明确的完成标准？有没有遗漏的步骤？
+        verification_en: Does each step have clear completion criteria? Any missing steps?
+
+      - id: setup
+        name_cn: 搭建
+        name_en: Setup
+        mode: solo
+        description_cn: 初始化项目骨架和 Git 工作流
+        description_en: Initialize project skeleton and Git workflow
+        skills:
+          - superpowers/E-Git工作流/01-使用Git-Worktrees
+        quality_cn: |
+          - Git 仓库初始化完成
+          - 基础目录结构就位
+          - Worktree 隔离工作分支
+        quality_en: |
+          - Git repository initialized
+          - Base directory structure in place
+          - Worktree isolates working branches
+        verification_cn: 项目能正常启动吗？Git 仓库是否配置正确？
+        verification_en: Can the project start normally? Is Git configured correctly?
+
+      - id: develop
+        name_cn: 编码
+        name_en: Develop
+        mode: solo-or-multi
+        description_cn: 按 TDD 纪律逐步实现功能，严格遵循红-绿-重构循环
+        description_en: Implement features step by step following TDD discipline — red-green-refactor
+        skills:
+          - superpowers/A-开发方法论/01-测试驱动开发-TDD
+          - superpowers/B-项目规划与执行/03-执行计划
+        quality_cn: |
+          - 先写测试，再写实现代码
+          - 每个功能有对应的测试用例
+          - 代码简洁，无冗余
+          - 遵循红-绿-重构循环
+        quality_en: |
+          - Write tests before implementation
+          - Every feature has corresponding test cases
+          - Code is clean with no redundancy
+          - Follow red-green-refactor cycle
+        verification_cn: 所有测试是否通过？是否严格遵循了 TDD 红-绿-重构循环？
+        verification_en: Do all tests pass? Was TDD red-green-refactor cycle strictly followed?
+
+      - id: review
+        name_cn: 评审
+        name_en: Review
+        mode: multi
+        description_cn: 派遣子代理做代码评审，在问题扩散前捕获它们
+        description_en: Dispatch review subagents to catch issues before they spread
+        skills:
+          - superpowers/C-代码评审/01-请求代码评审
+          - superpowers/C-代码评审/02-接收代码评审
+        quality_cn: |
+          - 评审覆盖所有改动文件
+          - 所有评审意见得到技术性回应
+          - 关键问题已确认修复
+        quality_en: |
+          - Review covers all changed files
+          - All review comments get technical responses
+          - Critical issues confirmed fixed
+        verification_cn: 评审意见是否全部处理？是否有未解决的关键问题？
+        verification_en: Are all review comments addressed? Any unresolved critical issues?
+
+      - id: verify
+        name_cn: 验证
+        name_en: Verify
+        mode: solo
+        description_cn: 全面验证，确保所有修改完整正确
+        description_en: Comprehensive verification to ensure all changes are complete and correct
+        skills:
+          - superpowers/A-开发方法论/03-完成前验证
+        quality_cn: |
+          - 所有功能按需求正常工作
+          - 边界条件已测试覆盖
+          - 无回归问题
+        quality_en: |
+          - All features work as required
+          - Edge cases tested and covered
+          - No regression issues
+        verification_cn: 验证清单的每一项是否都勾选通过？有没有遗漏的场景？
+        verification_en: Has every verification checklist item passed? Any missed scenarios?
+
+      - id: ship
+        name_cn: 交付
+        name_en: Ship
+        mode: solo
+        description_cn: 合并代码，清理分支，准备部署
+        description_en: Merge code, clean up branches, prepare for deployment
+        skills:
+          - superpowers/E-Git工作流/02-完成开发分支
+        quality_cn: |
+          - 所有测试通过
+          - 代码已合并到主分支
+          - 工作分支已清理
+        quality_en: |
+          - All tests pass
+          - Code merged to main branch
+          - Working branches cleaned up
+        verification_cn: 合并是否成功？是否有未解决的冲突？
+        verification_en: Did merge succeed? Any unresolved conflicts?
+
+  - id: debug-session
+    name_cn: 系统化调试
+    name_en: Systematic Debugging
+    description_cn: 遇到 bug 别慌，用科学方法定位根因、修复验证
+    description_en: Don't panic when bugs hit — use scientific methods to find root causes and verify fixes
+    icon: search
+    coverage: full
+    entry_cn: 你发现了一个 bug 或异常行为
+    entry_en: You've found a bug or unexpected behavior
+    exit_cn: bug 根因已定位，修复已验证，无回归问题
+    exit_en: Bug root cause located, fix verified, no regression
+    steps:
+      - id: identify
+        name_cn: 定位根因
+        name_en: Identify Root Cause
+        mode: solo
+        description_cn: 禁止猜测，用证据定位根因，构建最小复现路径
+        description_en: No guessing — use evidence to locate root cause, build minimal reproduction
+        skills:
+          - superpowers/A-开发方法论/02-系统化调试
+        quality_cn: |
+          - 不靠猜测，靠证据和数据
+          - 构建最小复现路径
+          - 记录完整的调试过程
+          - 明确根因所在的代码位置
+        quality_en: |
+          - Evidence and data driven, not guessing
+          - Minimal reproduction path built
+          - Complete debugging process documented
+          - Root cause code location identified
+        verification_cn: 是否有明确的证据指向根因？还是在猜测？能否用一句话描述根因？
+        verification_en: Is there clear evidence pointing to root cause? Or still guessing?
+
+      - id: fix
+        name_cn: 修复
+        name_en: Fix
+        mode: solo
+        description_cn: 先写能暴露 bug 的测试，再实施修复
+        description_en: Write a test that exposes the bug first, then implement the fix
+        skills:
+          - superpowers/A-开发方法论/01-测试驱动开发-TDD
+        quality_cn: |
+          - 先写一个能暴露 bug 的失败测试
+          - 实施最小化修复
+          - 确认测试从红变绿
+          - 不引入额外复杂度
+        quality_en: |
+          - Write a failing test that exposes the bug
+          - Implement minimal fix
+          - Confirm test goes from red to green
+          - No additional complexity introduced
+        verification_cn: 是否先写了暴露 bug 的测试？修复后测试是否从红变绿？
+        verification_en: Was a bug-exposing test written first? Did it go from red to green?
+
+      - id: verify
+        name_cn: 验证
+        name_en: Verify
+        mode: solo
+        description_cn: 确认修复完整，无回归，相关功能正常
+        description_en: Confirm fix is complete, no regression, related features work
+        skills:
+          - superpowers/A-开发方法论/03-完成前验证
+        quality_cn: |
+          - 原始 bug 已解决
+          - 无新引入的回归问题
+          - 相关功能全部正常
+          - 运行完整测试套件
+        quality_en: |
+          - Original bug resolved
+          - No newly introduced regressions
+          - All related features working
+          - Full test suite passes
+        verification_cn: 验证清单是否全部通过？有没有可能遗漏的回归场景？
+        verification_en: Has verification checklist fully passed? Any possibly missed regression scenarios?
+
+  - id: code-review
+    name_cn: 代码评审流程
+    name_en: Code Review Process
+    description_cn: 严格的、有套路的代码评审流程，从发起到处理到验证
+    description_en: Rigorous, structured code review process from initiation through resolution to verification
+    icon: clipboard-list
+    coverage: full
+    entry_cn: 你有一段代码需要评审，或收到了评审反馈
+    entry_en: You have code that needs review, or received review feedback
+    exit_cn: 代码质量确认，所有评审问题已修复并验证
+    exit_en: Code quality confirmed, all review issues fixed and verified
+    steps:
+      - id: request
+        name_cn: 发起评审
+        name_en: Request Review
+        mode: multi
+        description_cn: 明确评审范围，提供上下文，派遣评审子代理
+        description_en: Define review scope, provide context, dispatch review subagents
+        skills:
+          - superpowers/C-代码评审/01-请求代码评审
+        quality_cn: |
+          - 评审范围明确界定
+          - 提供必要的设计背景和上下文
+          - 评审子代理已派遣
+          - 评审重点已标注
+        quality_en: |
+          - Review scope clearly defined
+          - Necessary design context provided
+          - Review subagents dispatched
+          - Review focus areas marked
+        verification_cn: 评审请求是否包含足够的上下文让评审者理解代码意图？
+        verification_en: Does the review request include enough context for reviewers?
+
+      - id: receive
+        name_cn: 处理反馈
+        name_en: Handle Feedback
+        mode: solo
+        description_cn: 技术正确性优先于社交舒适度，先验证反馈再实施
+        description_en: Technical correctness over social comfort — verify feedback before implementing
+        skills:
+          - superpowers/C-代码评审/02-接收代码评审
+        quality_cn: |
+          - 每条反馈都得到技术性回应
+          - 先验证反馈的正确性，再决定是否实施
+          - 不合理的反馈要有技术理由拒绝
+          - 合理的修改已实施
+        quality_en: |
+          - Every feedback item gets a technical response
+          - Verify correctness of feedback before implementing
+          - Reject unreasonable feedback with technical reasoning
+          - Reasonable changes implemented
+        verification_cn: 是否有未回应的评审意见？每条反馈是否都经过了验证？
+        verification_en: Any unanswered review comments? Has each feedback been verified?
+
+      - id: verify
+        name_cn: 最终验证
+        name_en: Final Verification
+        mode: solo
+        description_cn: 确保所有评审问题已解决，代码仍然通过测试
+        description_en: Ensure all review issues resolved and code still passes tests
+        skills:
+          - superpowers/A-开发方法论/03-完成前验证
+        quality_cn: |
+          - 所有评审意见已处理
+          - 代码仍然通过全部测试
+          - 无新引入的问题
+          - 评审者确认通过
+        quality_en: |
+          - All review comments addressed
+          - Code still passes all tests
+          - No newly introduced issues
+          - Reviewer confirms approval
+        verification_cn: 评审问题是否全部解决？测试是否全部通过？
+        verification_en: All review issues resolved? All tests passing?
+
+  - id: agent-dev
+    name_cn: 多 Agent 系统开发
+    name_en: Multi-Agent System Development
+    description_cn: 构建多 Agent 协作系统的完整方法论，从架构到接口标准化
+    description_en: Complete methodology for building multi-agent collaborative systems
+    icon: bot
+    coverage: partial
+    entry_cn: 你需要构建一个多 Agent 协作系统
+    entry_en: You need to build a multi-agent collaborative system
+    exit_cn: Agent 系统完成，多 Agent 能按职责正确协作
+    exit_en: Agent system complete, multi-agent collaboration working correctly
+    steps:
+      - id: architect
+        name_cn: 架构设计
+        name_en: Architecture Design
+        mode: solo
+        description_cn: 明确哪些任务需要子代理，定义通信和评审流程
+        description_en: Identify which tasks need subagents, define communication and review process
+        skills:
+          - superpowers/D-Agent编排/02-子代理驱动开发
+        quality_cn: |
+          - 明确哪些任务需要独立子代理
+          - 定义代理间的通信方式
+          - 设计两阶段评审流程
+          - 每个代理有清晰的职责边界
+        quality_en: |
+          - Identify tasks needing independent subagents
+          - Define inter-agent communication
+          - Design two-phase review process
+          - Each agent has clear responsibility boundaries
+        verification_cn: 架构是否清晰划分了代理职责？有没有职责重叠或遗漏？
+        verification_en: Does architecture clearly separate agent responsibilities?
+
+      - id: dispatch
+        name_cn: 并行调度
+        name_en: Parallel Dispatch
+        mode: multi
+        description_cn: 独立问题域各派一个代理，并发调查而非顺序排队
+        description_en: One agent per independent problem domain, concurrent investigation
+        skills:
+          - superpowers/D-Agent编排/01-并行代理调度
+        quality_cn: |
+          - 每个独立问题域派遣一个专门代理
+          - 并行执行而非顺序排队
+          - 每个代理有明确的任务边界
+          - 结果汇总机制就位
+        quality_en: |
+          - Dedicated agent per independent problem domain
+          - Parallel execution, not sequential queuing
+          - Clear task boundaries per agent
+          - Result aggregation mechanism in place
+        verification_cn: 代理是否在独立的问题域上工作？有没有任务重叠或竞争？
+        verification_en: Are agents working on independent domains? Any task overlap?
+
+      - id: interface
+        name_cn: 接口标准化
+        name_en: Interface Standardization
+        mode: solo
+        description_cn: 用 MCP 协议标准化 Agent 与外部服务的交互接口
+        description_en: Standardize agent-to-external-service interfaces with MCP protocol
+        skills:
+          - claudekit/E-AI与Agent/04-MCP构建
+          - composio/A-开发与工具/02-MCP构建器
+        quality_cn: |
+          - MCP 协议规范正确实现
+          - 工具定义清晰完整
+          - 错误处理和边界情况覆盖
+          - 接口文档齐全
+        quality_en: |
+          - MCP protocol correctly implemented
+          - Tool definitions clear and complete
+          - Error handling and edge cases covered
+          - Interface documentation complete
+        verification_cn: MCP 服务器是否响应正确？工具定义是否完整覆盖所有功能？
+        verification_en: Does MCP server respond correctly? Do tool definitions cover all functions?
+
+      - id: review
+        name_cn: 评审
+        name_en: Review
+        mode: multi
+        description_cn: 对 Agent 系统进行两阶段评审
+        description_en: Two-phase review of the agent system
+        skills:
+          - superpowers/C-代码评审/01-请求代码评审
+          - superpowers/C-代码评审/02-接收代码评审
+        quality_cn: |
+          - 两阶段评审流程完成
+          - Agent 协作逻辑正确性验证
+          - 错误处理路径覆盖
+        quality_en: |
+          - Two-phase review process complete
+          - Agent collaboration logic verified
+          - Error handling paths covered
+        verification_cn: 两阶段评审是否都完成？Agent 协作是否经过实际测试？
+        verification_en: Both review phases complete? Agent collaboration actually tested?

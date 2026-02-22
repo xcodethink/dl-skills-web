@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getSkillsBySource, getSkillsByLanguage } from '../../lib/skills';
+
+const allSkills = getSkillsByLanguage('cn');
+
+const sources = [
+  { id: 'superpowers', name: 'Superpowers', org: 'obra',
+    desc_cn: '开发纪律方法论——铁律体系，反合理化表格，让 AI 严格执行',
+    desc_en: 'Development discipline methodology — iron law system, strict AI execution' },
+  { id: 'claudekit', name: 'ClaudeKit', org: 'mrgoonie',
+    desc_cn: '最全面的技能集——覆盖前后端、DevOps、AI、文档处理',
+    desc_en: 'Most comprehensive skill set — frontend, backend, DevOps, AI, document processing' },
+  { id: 'bear2u-skills', name: 'Bear2u Skills', org: 'bear2u',
+    desc_cn: '实战脚手架——项目生成器、设计工具、AI 工程',
+    desc_en: 'Practical scaffolding — project generators, design tools, AI engineering' },
+  { id: 'composio', name: 'Composio', org: 'ComposioHQ',
+    desc_cn: '集成自动化——API 对接、营销工具、商业流程',
+    desc_en: 'Integration automation — API connections, marketing tools, business workflows' },
+  { id: 'dataviz', name: 'DataViz', org: 'K-Dense-AI',
+    desc_cn: '数据可视化专项——Matplotlib、Plotly、Seaborn 等',
+    desc_en: 'Data visualization — Matplotlib, Plotly, Seaborn and more' },
+];
+---
+
+<Base title="Sources | 来源" description="Claude Code Skills source repositories" keywords="claude code skills sources, ai skills github, superpowers, claudekit">
+  <div class="max-w-6xl mx-auto px-8 py-16">
+    <h1 class="text-3xl font-extrabold tracking-tight text-text-primary">
+      <span data-lang-cn>来源仓库</span>
+      <span data-lang-en>Sources</span>
+    </h1>
+    <p class="text-base text-text-secondary mt-3">
+      <span data-lang-cn>所有技能来自以下精选开源仓库，经过解读、翻译和整理</span>
+      <span data-lang-en>All skills come from these curated open-source repositories, analyzed, translated and organized</span>
+    </p>
+
+    <div class="grid gap-6 mt-10">
+      {sources.map(source => {
+        const skills = getSkillsBySource(source.id, 'cn');
+        return (
+          <a href={`/sources/${source.id}`} class="block p-6 rounded-2xl border border-border/60 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 group">
+            <div class="flex items-start justify-between">
+              <div>
+                <h2 class="text-lg font-semibold text-text-primary group-hover:text-accent transition-colors duration-200">{source.name}</h2>
+                <p class="text-sm text-text-secondary mt-1.5 leading-relaxed">
+                  <span data-lang-cn>{source.desc_cn}</span>
+                  <span data-lang-en>{source.desc_en}</span>
+                </p>
+              </div>
+              <span class="text-xs text-text-tertiary shrink-0 font-mono">{skills.length}</span>
+            </div>
+            <div class="mt-3 text-xs text-text-tertiary font-mono">
+              {source.org}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</Base>

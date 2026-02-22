@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import Workspace from '../components/Workspace.tsx';
+import { getSkillsByLanguage, getCategoriesWithCounts, getWorkflowsWithSkills } from '../lib/skills';
+import { SCENES } from '../lib/scenes';
+
+// Load both language versions
+const cnSkills = getSkillsByLanguage('cn');
+const enSkills = getSkillsByLanguage('en');
+
+// Deterministic hash for consistent mock stats
+function simpleHash(str: string): number {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+}
+
+// Build paired skill lookup (cn id -> en skill)
+const enSkillById = new Map(enSkills.map(s => [s.id, s]));
+
+// Card summaries with bilingual fields
+const skills = cnSkills.map(s => {
+  const h = simpleHash(s.id);
+  const base = s.verified ? 3 : 1;
+  const srcBoost = s.source === 'superpowers' ? 2.5 : s.source === 'claudekit' ? 1.5 : 1;
+  const paired = s.pairedId ? enSkillById.get(s.pairedId) : undefined;
+  return {
+    id: s.id,
+    title_cn: s.title,
+    title_en: paired?.title || s.title,
+    highlight_cn: s.highlight,
+    highlight_en: paired?.highlight || s.highlight,
+    tags: s.tags,
+    type: s.type,
+    verified: s.verified,
+    source: s.source,
+    slug_cn: s.slug,
+    slug_en: paired?.slug,
+    unifiedCategory: s.unifiedCategory,
+    estimatedReadMinutes: s.estimatedReadMinutes,
+    compatibleWith: s.compatibleWith,
+    views: Math.round((200 + (h % 800)) * base * srcBoost),
+    copies: Math.round((30 + ((h >> 4) % 170)) * base * srcBoost),
+    invocations: Math.round((10 + ((h >> 8) % 90)) * base * srcBoost),
+  };
+});
+
+// Full content keyed by lang:id (for preview panel)
+const contentMap = Object.fromEntries([
+  ...cnSkills.map(s => [`cn:${s.id}`, s.rawContent]),
+  ...enSkills.map(s => [`en:${s.id}`, s.rawContent]),
+]);
+
+// Bilingual categories
+const categories = getCategoriesWithCounts('cn').map(c => ({
+  ...c,
+  scene: c.scene || 'productivity',
+}));
+
+// Bilingual scene summaries
+const scenes = SCENES.map(s => ({
+  id: s.id,
+  name_cn: s.name_cn,
+  name_en: s.name_en,
+  icon: s.icon,
+}));
+
+// Bilingual workflow summaries
+const cnWorkflows = getWorkflowsWithSkills('cn');
+const enWorkflows = getWorkflowsWithSkills('en');
+const enWorkflowMap = new Map(enWorkflows.map(w => [w.id, w]));
+
+const workflows = cnWorkflows.map(wf => {
+  const enWf = enWorkflowMap.get(wf.id);
+  return {
+    id: wf.id,
+    name_cn: wf.name_cn,
+    name_en: enWf?.name_en || wf.name_en || wf.name_cn,
+    description_cn: wf.description_cn,
+    description_en: enWf?.description_en || wf.description_en || wf.description_cn,
+    icon: wf.icon,
+    coverage: wf.coverage,
+    entry_cn: wf.entry_cn,
+    entry_en: enWf?.entry_en || wf.entry_en || wf.entry_cn,
+    exit_cn: wf.exit_cn,
+    exit_en: enWf?.exit_en || wf.exit_en || wf.exit_cn,
+    stepCount: wf.steps.length,
+    steps: wf.steps.map((step, i) => {
+      const enStep = enWf?.steps[i];
+      return {
+        id: step.id,
+        name_cn: step.name_cn,
+        name_en: enStep?.name_en || step.name_en || step.name_cn,
+        mode: step.mode,
+        description_cn: step.description_cn,
+        description_en: enStep?.description_en || step.description_en || step.description_cn,
+        skillCount: step.resolvedSkills?.length || 0,
+      };
+    }),
+  };
+});
+---
+
+<Base
+  title="Claude Code Skills"
+  description="Claude Code Skills — Battle-tested AI skill library. Verified skills, one MCP config, instant activation."
+  keywords="claude code, claude code skills, claude code tips, ai skills, mcp server, cursor rules, claude code prompts, ai coding tools"
+  workspace
+>
+  <Workspace
+    client:load
+    skills={skills}
+    contentMap={contentMap}
+    categories={categories}
+    scenes={scenes}
+    workflows={workflows}
+  />
+</Base>

@@ -1,0 +1,169 @@
+categories:
+  # ===== Pipeline — 开发流水线（有顺序，从构思到交付）=====
+
+  - id: think-plan
+    name_cn: 构思与规划
+    name_en: Think & Plan
+    icon: clipboard
+    phase: pipeline
+    order: 1
+    mode: solo
+    scene: coding
+    description_cn: 头脑风暴、需求分析、编写实施计划
+    description_en: Brainstorming, requirements analysis, writing implementation plans
+
+  - id: scaffold
+    name_cn: 项目搭建
+    name_en: Project Setup
+    icon: rocket
+    phase: pipeline
+    order: 2
+    mode: solo
+    scene: coding
+    description_cn: 项目脚手架、环境初始化、目录结构生成
+    description_en: Project scaffolding, environment initialization, directory structure generation
+
+  - id: design
+    name_cn: 设计
+    name_en: Design
+    icon: palette
+    phase: pipeline
+    order: 3
+    mode: solo
+    scene: design
+    description_cn: UI/UX 设计、设计系统、落地页、品牌规范
+    description_en: UI/UX design, design systems, landing pages, brand guidelines
+
+  - id: frontend
+    name_cn: 前端编码
+    name_en: Frontend
+    icon: code
+    phase: pipeline
+    order: 4
+    mode: solo-or-multi
+    scene: coding
+    description_cn: React/Vue/Svelte 开发、3D、Web 框架
+    description_en: React/Vue/Svelte development, 3D, web frameworks
+
+  - id: backend
+    name_cn: 后端编码
+    name_en: Backend
+    icon: server
+    phase: pipeline
+    order: 5
+    mode: solo-or-multi
+    scene: coding
+    description_cn: API 设计、数据库、认证、支付
+    description_en: API design, databases, authentication, payments
+
+  - id: test
+    name_cn: 测试
+    name_en: Testing
+    icon: check-circle
+    phase: pipeline
+    order: 6
+    mode: solo-or-multi
+    scene: coding
+    description_cn: TDD、单元测试、E2E、集成测试
+    description_en: TDD, unit testing, E2E, integration testing
+
+  - id: debug
+    name_cn: 调试
+    name_en: Debug
+    icon: search
+    phase: pipeline
+    order: 7
+    mode: solo
+    scene: coding
+    description_cn: 系统化调试、根因分析、创意问题解决
+    description_en: Systematic debugging, root cause analysis, creative problem solving
+
+  - id: review
+    name_cn: 评审与验证
+    name_en: Review & Verify
+    icon: clipboard-list
+    phase: pipeline
+    order: 8
+    mode: multi
+    scene: coding
+    description_cn: 代码评审、完成验证、变更追踪、双 AI 互查
+    description_en: Code review, completion verification, change tracking, dual-AI cross-check
+
+  - id: ship
+    name_cn: 交付部署
+    name_en: Ship & Deploy
+    icon: rocket
+    phase: pipeline
+    order: 9
+    mode: solo
+    scene: coding
+    description_cn: Git 工作流、CI/CD、部署、发布
+    description_en: Git workflows, CI/CD, deployment, release
+
+  # ===== Specialist — 专项技能（独立领域，按需使用）=====
+
+  - id: ai-engineering
+    name_cn: AI 工程
+    name_en: AI Engineering
+    icon: bot
+    phase: specialist
+    order: 10
+    mode: solo-or-multi
+    scene: ai-engineering
+    description_cn: Agent 编排、MCP 开发、提示词工程、多模态 AI
+    description_en: Agent orchestration, MCP development, prompt engineering, multimodal AI
+
+  - id: data-viz
+    name_cn: 数据可视化
+    name_en: Data Visualization
+    icon: bar-chart
+    phase: specialist
+    order: 11
+    mode: solo
+    scene: data
+    description_cn: Matplotlib、Plotly、Seaborn、出版级科学可视化
+    description_en: Matplotlib, Plotly, Seaborn, publication-quality scientific visualization
+
+  - id: content
+    name_cn: 内容营销
+    name_en: Content & Marketing
+    icon: file-text
+    phase: specialist
+    order: 12
+    mode: solo
+    scene: content
+    description_cn: 写作、社交媒体、广告分析、潜客研究
+    description_en: Writing, social media, ad analysis, lead research
+
+  - id: documents
+    name_cn: 文档处理
+    name_en: Documents
+    icon: file-text
+    phase: specialist
+    order: 13
+    mode: solo
+    scene: productivity
+    description_cn: Word、PDF、PPT、Excel 创建与处理
+    description_en: Word, PDF, PPT, Excel creation and processing
+
+  - id: utilities
+    name_cn: 效率工具
+    name_en: Utilities
+    icon: wrench
+    phase: specialist
+    order: 14
+    mode: solo
+    scene: productivity
+    description_cn: 开发工具、媒体处理、文件管理、搜索
+    description_en: Dev tools, media processing, file management, search
+
+  - id: meta
+    name_cn: 元技能
+    name_en: Meta Skills
+    icon: brain
+    phase: specialist
+    order: 15
+    mode: solo
+    scene: productivity
+    description_cn: 如何编写 Skill、技能设计方法论、系统配置
+    description_en: How to write skills, skill design methodology, system configuration
