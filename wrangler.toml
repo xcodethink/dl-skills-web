@@ -1,0 +1,8 @@
+name = "dl-skills-web"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dl-skills-pipeline"
+database_id = "4901f87d-862c-42d6-98d1-2dc1c9ca07ef"
