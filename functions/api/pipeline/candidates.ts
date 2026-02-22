@@ -33,6 +33,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     params.push(source);
   }
 
+  const search = url.searchParams.get('search');
+  if (search) {
+    const term = `%${search}%`;
+    conditions.push('(source_id LIKE ? OR source_path LIKE ? OR summary_en LIKE ? OR summary_cn LIKE ?)');
+    params.push(term, term, term, term);
+  }
+
   const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
   const [countResult, rows] = await Promise.all([

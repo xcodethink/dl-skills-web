@@ -9,7 +9,10 @@ interface Env {
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const rows = await context.env.DB.prepare(
-    `SELECT s.*, COUNT(c.id) as candidate_count
+    `SELECT s.*,
+            COUNT(c.id) as candidate_count,
+            SUM(CASE WHEN c.status IN ('approved','translating','translated','publishing','published') THEN 1 ELSE 0 END) as approved_count,
+            AVG(c.score_weighted) as avg_score
      FROM sources s
      LEFT JOIN candidates c ON c.source_id = s.id
      GROUP BY s.id
