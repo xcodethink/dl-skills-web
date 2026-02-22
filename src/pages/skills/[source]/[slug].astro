@@ -41,13 +41,64 @@ function getCleanContent(raw: string): string {
 
 const cleanContent = getCleanContent(skill.rawContent);
 const htmlContent = await marked.parse(cleanContent);
+
+const SITE_URL = 'https://claudecodeskills.wayjet.io';
+const skillUrl = `/skills/${skill.source}/${skill.slug}`;
+
+// Source display name
+const sourceNames: Record<string, string> = {
+  superpowers: 'Superpowers',
+  claudekit: 'ClaudeKit',
+  composio: 'Composio',
+  'bear2u-skills': 'Bear2U Skills',
+  dataviz: 'DataViz',
+};
+
+// hreflang: link CN ↔ EN paired pages
+const hreflangTags = [];
+if (pairedSkill) {
+  const cnUrl = lang === 'cn' ? skillUrl : `/skills/${pairedSkill.source}/${pairedSkill.slug}`;
+  const enUrl = lang === 'en' ? skillUrl : `/skills/${pairedSkill.source}/${pairedSkill.slug}`;
+  hreflangTags.push(
+    { lang: 'zh-CN', url: cnUrl },
+    { lang: 'en', url: enUrl },
+    { lang: 'x-default', url: enUrl },
+  );
+}
+
+// LearningResource schema
+const learningResourceSchema = {
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": skill.title,
+  "description": skill.highlight || `${skill.title} — Claude Code Skill`,
+  "url": `${SITE_URL}${skillUrl}`,
+  "inLanguage": lang === 'cn' ? 'zh-CN' : 'en',
+  "learningResourceType": "skill",
+  "educationalLevel": skill.difficulty,
+  "timeRequired": `PT${skill.estimatedReadMinutes}M`,
+  "keywords": skill.tags.join(', '),
+  "about": { "@type": "Thing", "name": "Claude Code" },
+  "isPartOf": {
+    "@type": "CollectionPage",
+    "name": "Claude Code Skills",
+    "url": `${SITE_URL}/`,
+  },
+};
 ---
 
 <Base
   title={skill.title}
   description={`${skill.title} — ${skill.highlight || 'Claude Code Skill'}`}
-  keywords={`claude code, ${skill.tags.join(', ')}, ai skills`}
+  keywords={`claude code, ${skill.tags.join(', ')}, ai skills, claude code ${skill.type}`}
   lang={lang}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: sourceNames[skill.source] || skill.source, url: `/sources/${skill.source}` },
+    { name: skill.title, url: skillUrl },
+  ]}
+  structuredData={learningResourceSchema}
+  hreflang={hreflangTags.length > 0 ? hreflangTags : undefined}
 >
   <div class="max-w-5xl mx-auto px-8 py-16">
     <div class="flex items-center justify-between">

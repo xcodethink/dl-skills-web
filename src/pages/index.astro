@@ -104,11 +104,29 @@ const workflows = cnWorkflows.map(wf => {
 ---
 
 <Base
-  title="Claude Code Skills"
-  description="Claude Code Skills — Battle-tested AI skill library. Verified skills, one MCP config, instant activation."
-  keywords="claude code, claude code skills, claude code tips, ai skills, mcp server, cursor rules, claude code prompts, ai coding tools"
+  title="Claude Code Skills — Battle-tested AI Skill Library | 100+ Verified Skills"
+  description="Claude Code Skills — 100+ battle-tested AI coding skills for Claude Code. Verified prompts for TDD, debugging, code review & more. One MCP config, instant activation."
+  keywords="claude code, claude code skills, claude code tips, claude code prompts, claude code best practices, ai skills, mcp server, mcp skills, cursor rules, ai coding tools, claude code tutorial"
   workspace
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Claude Code Skills",
+    "description": "Battle-tested AI skill library for Claude Code. 100+ verified skills across 15 categories.",
+    "url": "https://claudecodeskills.wayjet.io/",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": skills.length,
+      "itemListElement": skills.slice(0, 20).map((s: any, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": s.title_cn,
+        "url": `https://claudecodeskills.wayjet.io/skills/${s.source}/${s.slug_cn}`,
+      })),
+    },
+  }}
 >
+  <h1 class="sr-only">Claude Code Skills — Battle-tested AI Skill Library for Claude Code</h1>
   <Workspace
     client:load
     skills={skills}

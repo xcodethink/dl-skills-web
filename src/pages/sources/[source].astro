@@ -25,7 +25,16 @@ const grouped = skills.reduce((acc, skill) => {
 }, {} as Record<string, typeof skills>);
 ---
 
-<Base title={info.name} description={info.desc_en}>
+<Base
+  title={info.name}
+  description={info.desc_en || `${info.name} — Claude Code Skills source`}
+  keywords={`claude code skills, ${info.name}, ai skills source`}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Sources', url: '/sources' },
+    { name: info.name, url: `/sources/${source}` },
+  ]}
+>
   <div class="max-w-6xl mx-auto px-8 py-16">
     <a href="/sources" class="text-sm text-text-tertiary hover:text-accent transition-colors duration-200">
       <Icon name="arrow-left" size={14} class="inline mr-1" />

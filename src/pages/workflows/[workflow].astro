@@ -30,9 +30,37 @@ const modeLabels_en: Record<string, string> = {
 };
 
 const skillCount = workflow.steps.flatMap(s => s.resolvedSkills || []).length;
+
+const SITE_URL = 'https://claudecodeskills.wayjet.io';
+
+// HowTo schema for workflow
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": workflow.name_cn,
+  "description": workflow.description_cn,
+  "url": `${SITE_URL}/workflows/${workflow.id}`,
+  "totalTime": `PT${workflow.steps.length * 10}M`,
+  "step": workflow.steps.map((step, i) => ({
+    "@type": "HowToStep",
+    "position": i + 1,
+    "name": step.name_cn,
+    "text": step.description_cn,
+  })),
+};
 ---
 
-<Base title={workflow.name_cn} description={workflow.description_cn}>
+<Base
+  title={workflow.name_cn}
+  description={workflow.description_cn}
+  keywords={`claude code workflow, ${workflow.name_cn}, ai coding workflow`}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Workflows', url: '/#workflows' },
+    { name: workflow.name_cn, url: `/workflows/${workflow.id}` },
+  ]}
+  structuredData={howToSchema}
+>
   <div class="max-w-5xl mx-auto px-8 py-16">
     <a href="/#workflows" class="text-sm text-text-tertiary hover:text-accent transition-colors duration-200">
       <Icon name="arrow-left" size={14} class="inline mr-1" />

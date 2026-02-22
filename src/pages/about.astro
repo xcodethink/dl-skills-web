@@ -6,8 +6,24 @@ import PixelBrothers from '../components/PixelBrothers.astro';
 
 <Base
   title="About | 关于"
-  description="One person, one AI, one skill library. The story behind CC Skills."
-  keywords="wayjet, wayne, claude code, ai builder, solo developer, cc skills"
+  description="One person, one AI, one skill library. The story behind Claude Code Skills — curating 100+ battle-tested AI coding skills."
+  keywords="wayjet, wayne, claude code, ai builder, solo developer, cc skills, claude code skills about"
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'About', url: '/about' },
+  ]}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Claude Code Skills",
+    "url": "https://claudecodeskills.wayjet.io",
+    "description": "Curated library of 100+ battle-tested AI coding skills for Claude Code",
+    "founder": {
+      "@type": "Person",
+      "name": "Wayne",
+      "url": "https://github.com/xcodethink",
+    },
+  }}
 >
   <!-- Hero -->
   <section class="relative overflow-hidden">
