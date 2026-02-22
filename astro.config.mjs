@@ -18,5 +18,7 @@ export default defineConfig({
     }
   },
 
-  integrations: [preact(), sitemap()]
+  integrations: [preact(), sitemap({
+    filter: (page) => !page.includes(process.env.CONSOLE_PATH || 'console'),
+  })]
 });

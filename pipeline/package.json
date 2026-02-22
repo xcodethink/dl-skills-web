@@ -1,0 +1,23 @@
+{
+  "name": "dl-skills-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "discover": "tsx src/discover.ts",
+    "analyze": "tsx src/analyze.ts",
+    "translate": "tsx src/translate.ts",
+    "publish": "tsx src/publish.ts",
+    "health-check": "tsx src/health-check.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "js-yaml": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

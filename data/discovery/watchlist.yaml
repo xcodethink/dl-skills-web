@@ -1,0 +1,69 @@
+# =============================================================================
+# Skill Repository Watchlist
+# =============================================================================
+# Repositories known to contain Claude Code skills.
+# The discovery engine checks these weekly for new/updated skills.
+#
+# Status:
+#   integrated  — Already processed and live on the site
+#   pending     — Known but not yet processed
+#   archived    — No longer monitored (deleted, license changed, etc.)
+# =============================================================================
+
+repositories:
+  # --- Already integrated ---
+  - repo: obra/superpowers
+    status: integrated
+    skill_pattern: "**/*.md"
+    notes: "Verified source. Dev discipline methodology."
+
+  - repo: mrgoonie/claudekit-skills
+    status: integrated
+    skill_pattern: "**/*.md"
+    notes: "Comprehensive skill collection."
+
+  - repo: bear2u/my-skills
+    status: integrated
+    skill_pattern: "**/*.md"
+    notes: "Practical scaffolding & tools."
+
+  - repo: ComposioHQ/awesome-claude-skills
+    status: integrated
+    skill_pattern: "skills/*/SKILL.md"
+    notes: "Integration automation skills."
+
+  - repo: K-Dense-AI/claude-scientific-skills
+    status: integrated
+    skill_pattern: "**/*.md"
+    notes: "Data visualization specialists."
+
+  # --- Pending discovery ---
+  - repo: anthropics/skills
+    status: pending
+    skill_pattern: "skills/*/SKILL.md"
+    notes: "Official Anthropic skills repository."
+
+  - repo: alirezarezvani/claude-skills
+    status: pending
+    skill_pattern: "skills/**/*.md"
+    notes: "53 domain expert skills across 8+ domains."
+
+  - repo: daymade/claude-code-skills
+    status: pending
+    skill_pattern: "**/*.md"
+    notes: "37 production-ready skills."
+
+  - repo: majiayu000/claude-skill-registry
+    status: pending
+    skill_pattern: "**/*.md"
+    notes: "Comprehensive registry with web interface."
+
+  - repo: abubakarsiddik31/claude-skills-collection
+    status: pending
+    skill_pattern: "skills/**/*.md"
+    notes: "Official + community curated collection."
+
+  - repo: affaan-m/everything-claude-code
+    status: pending
+    skill_pattern: "skills/**/*.md"
+    notes: "Mixed structure: agents, rules, commands, skills."

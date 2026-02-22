@@ -96,13 +96,31 @@ const PROJECT_ROOT = path.resolve(import.meta.dirname, '../../');
 const CONTENT_DIR = path.join(PROJECT_ROOT, 'content');
 const DATA_DIR = path.join(PROJECT_ROOT, 'data');
 
-const SOURCES = [
-  'superpowers',
-  'claudekit',
-  'bear2u-skills',
-  'composio',
-  'dataviz',
-];
+// --- Source Registry ---
+
+export interface SourceInfo {
+  id: string;
+  name: string;
+  repo: string;
+  url: string;
+  desc_cn: string;
+  desc_en: string;
+  verified: boolean;
+}
+
+let _sources: SourceInfo[] | null = null;
+export function loadSources(): SourceInfo[] {
+  if (_sources) return _sources;
+  const filePath = path.join(DATA_DIR, 'sources.yaml');
+  const raw = fs.readFileSync(filePath, 'utf-8');
+  const data = yaml.load(raw) as { sources: SourceInfo[] };
+  _sources = data.sources;
+  return _sources;
+}
+
+function getSourceIds(): string[] {
+  return loadSources().map(s => s.id);
+}
 
 // --- Loaders ---
 
@@ -327,7 +345,7 @@ export function getAllSkills(): SkillMeta[] {
   if (_allSkills) return _allSkills;
 
   const skills: SkillMeta[] = [];
-  for (const source of SOURCES) {
+  for (const source of getSourceIds()) {
     skills.push(...scanSkillFiles(`${source}-cn`, source, 'cn'));
     skills.push(...scanSkillFiles(`${source}-en`, source, 'en'));
   }

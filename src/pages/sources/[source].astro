@@ -2,25 +2,19 @@
 import Base from '../../layouts/Base.astro';
 import SkillCard from '../../components/SkillCard.astro';
 import Icon from '../../components/Icon.astro';
-import { getSkillsBySource } from '../../lib/skills';
+import { getSkillsBySource, loadSources } from '../../lib/skills';
 
-const SOURCE_DATA: Record<string, { name: string; desc_cn: string; desc_en: string; url: string }> = {
-  superpowers: { name: 'Superpowers', desc_cn: '开发纪律方法论', desc_en: 'Dev Discipline', url: 'https://github.com/obra/superpowers' },
-  claudekit: { name: 'ClaudeKit', desc_cn: '综合技能集', desc_en: 'Comprehensive Skills', url: 'https://github.com/mrgoonie/claudekit-skills' },
-  'bear2u-skills': { name: 'Bear2u Skills', desc_cn: '实战脚手架', desc_en: 'Practical Scaffolding', url: 'https://github.com/bear2u/my-skills' },
-  composio: { name: 'Composio', desc_cn: '集成自动化', desc_en: 'Integration Automation', url: 'https://github.com/ComposioHQ/awesome-claude-skills' },
-  dataviz: { name: 'DataViz', desc_cn: '数据可视化', desc_en: 'Data Visualization', url: 'https://github.com/K-Dense-AI/claude-scientific-skills' },
-};
+const allSources = loadSources();
 
 export function getStaticPaths() {
-  const sources = ['superpowers', 'claudekit', 'bear2u-skills', 'composio', 'dataviz'];
-  return sources.map(id => ({
-    params: { source: id },
+  const allSources = loadSources();
+  return allSources.map(s => ({
+    params: { source: s.id },
   }));
 }
 
 const { source } = Astro.params;
-const info = SOURCE_DATA[source!] || { name: source, desc_cn: '', desc_en: '', url: '' };
+const info = allSources.find(s => s.id === source) || { id: source, name: source, repo: '', url: '', desc_cn: '', desc_en: '', verified: false };
 const skills = getSkillsBySource(source!, 'cn');
 
 const grouped = skills.reduce((acc, skill) => {

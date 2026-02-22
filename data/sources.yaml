@@ -1,0 +1,50 @@
+# =============================================================================
+# DL Skills — Source Registry
+# =============================================================================
+# Each source represents a GitHub repository containing curated skills.
+# The pipeline uses this file to:
+#   1. Scan content directories at build time (Astro SSG)
+#   2. Generate source listing pages
+#   3. Discover and track upstream repositories (automation pipeline)
+# =============================================================================
+
+sources:
+  - id: superpowers
+    name: Superpowers
+    repo: obra/superpowers
+    url: https://github.com/obra/superpowers
+    desc_cn: "开发纪律方法论——铁律体系，反合理化表格，让 AI 严格执行"
+    desc_en: "Development discipline methodology — iron law system, strict AI execution"
+    verified: true
+
+  - id: claudekit
+    name: ClaudeKit
+    repo: mrgoonie/claudekit-skills
+    url: https://github.com/mrgoonie/claudekit-skills
+    desc_cn: "最全面的技能集——覆盖前后端、DevOps、AI、文档处理"
+    desc_en: "Most comprehensive skill set — frontend, backend, DevOps, AI, document processing"
+    verified: false
+
+  - id: bear2u-skills
+    name: Bear2u Skills
+    repo: bear2u/my-skills
+    url: https://github.com/bear2u/my-skills
+    desc_cn: "实战脚手架——项目生成器、设计工具、AI 工程"
+    desc_en: "Practical scaffolding — project generators, design tools, AI engineering"
+    verified: false
+
+  - id: composio
+    name: Composio
+    repo: ComposioHQ/awesome-claude-skills
+    url: https://github.com/ComposioHQ/awesome-claude-skills
+    desc_cn: "集成自动化——API 对接、营销工具、商业流程"
+    desc_en: "Integration automation — API connections, marketing tools, business workflows"
+    verified: false
+
+  - id: dataviz
+    name: DataViz
+    repo: K-Dense-AI/claude-scientific-skills
+    url: https://github.com/K-Dense-AI/claude-scientific-skills
+    desc_cn: "数据可视化专项——Matplotlib、Plotly、Seaborn 等"
+    desc_en: "Data visualization — Matplotlib, Plotly, Seaborn and more"
+    verified: false
