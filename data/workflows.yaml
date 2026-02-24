@@ -301,35 +301,57 @@ workflows:
   - id: agent-dev
     name_cn: 多 Agent 系统开发
     name_en: Multi-Agent System Development
-    description_cn: 构建多 Agent 协作系统的完整方法论，从架构到接口标准化
-    description_en: Complete methodology for building multi-agent collaborative systems
+    description_cn: 构建多 Agent 协作系统的完整方法论，从架构设计到提示工程、SDK 实现、评测验证
+    description_en: Complete methodology for multi-agent systems — architecture, prompt design, SDK implementation, evaluation, and review
     icon: bot
-    coverage: partial
+    coverage: full
     entry_cn: 你需要构建一个多 Agent 协作系统
     entry_en: You need to build a multi-agent collaborative system
-    exit_cn: Agent 系统完成，多 Agent 能按职责正确协作
-    exit_en: Agent system complete, multi-agent collaboration working correctly
+    exit_cn: Agent 系统完成，经过评测验证，多 Agent 能按职责正确协作
+    exit_en: Agent system complete, evaluated and verified, multi-agent collaboration working correctly
     steps:
       - id: architect
         name_cn: 架构设计
         name_en: Architecture Design
         mode: solo
-        description_cn: 明确哪些任务需要子代理，定义通信和评审流程
-        description_en: Identify which tasks need subagents, define communication and review process
+        description_cn: 明确哪些任务需要子代理，定义通信流程，设计上下文隔离策略
+        description_en: Identify tasks needing subagents, define communication, design context isolation strategy
         skills:
           - superpowers/D-Agent编排/02-子代理驱动开发
+          - neolab/A-Agent设计/02-Agent上下文工程
         quality_cn: |
           - 明确哪些任务需要独立子代理
           - 定义代理间的通信方式
-          - 设计两阶段评审流程
+          - 设计上下文隔离策略（四桶法：写、选、压、隔）
           - 每个代理有清晰的职责边界
         quality_en: |
           - Identify tasks needing independent subagents
           - Define inter-agent communication
-          - Design two-phase review process
+          - Design context isolation strategy (four-bucket: Write, Select, Compress, Isolate)
           - Each agent has clear responsibility boundaries
-        verification_cn: 架构是否清晰划分了代理职责？有没有职责重叠或遗漏？
-        verification_en: Does architecture clearly separate agent responsibilities?
+        verification_cn: 架构是否清晰划分了代理职责？上下文策略是否防止退化？
+        verification_en: Does architecture clearly separate responsibilities? Does context strategy prevent degradation?
+
+      - id: prompt-design
+        name_cn: 提示设计
+        name_en: Prompt Design
+        mode: solo
+        description_cn: 为每个 Agent 设计 System Prompt、触发条件、工具权限和质量标准
+        description_en: Design system prompts, triggering conditions, tool permissions, and quality standards for each agent
+        skills:
+          - neolab/A-Agent设计/01-Agent系统提示设计
+        quality_cn: |
+          - 每个 Agent 有完整的 frontmatter（name、description、model、tools）
+          - description 包含 2-4 个触发示例
+          - System Prompt 包含角色、职责、流程、输出格式
+          - 工具权限遵循最小权限原则
+        quality_en: |
+          - Each agent has complete frontmatter (name, description, model, tools)
+          - Description includes 2-4 triggering examples
+          - System prompt covers role, responsibilities, process, output format
+          - Tool permissions follow least-privilege principle
+        verification_cn: 每个 Agent 的触发条件是否清晰？System Prompt 是否覆盖边缘情况？
+        verification_en: Are triggering conditions clear for each agent? Do system prompts cover edge cases?
 
       - id: dispatch
         name_cn: 并行调度
@@ -359,8 +381,7 @@ workflows:
         description_cn: 用 MCP 协议标准化 Agent 与外部服务的交互接口
         description_en: Standardize agent-to-external-service interfaces with MCP protocol
         skills:
-          - claudekit/E-AI与Agent/04-MCP构建
-          - composio/A-开发与工具/02-MCP构建器
+          - anthropics/A-官方技能/03-MCP构建器
         quality_cn: |
           - MCP 协议规范正确实现
           - 工具定义清晰完整
@@ -374,12 +395,54 @@ workflows:
         verification_cn: MCP 服务器是否响应正确？工具定义是否完整覆盖所有功能？
         verification_en: Does MCP server respond correctly? Do tool definitions cover all functions?
 
+      - id: implement
+        name_cn: SDK 实现
+        name_en: SDK Implementation
+        mode: solo
+        description_cn: 使用 Claude Agent SDK 将设计落地为可运行的 Agent 代码
+        description_en: Implement agent designs as runnable code using Claude Agent SDK
+        skills:
+          - xiaolai/A-Agent-SDK/01-Claude-Agent-SDK开发
+        quality_cn: |
+          - 使用正确的 SDK API（query、tool、子代理）
+          - Hooks 生命周期正确配置
+          - 权限模式匹配安全需求
+          - 结构化输出经过 JSON Schema 验证
+        quality_en: |
+          - Correct SDK API usage (query, tool, subagents)
+          - Hooks lifecycle properly configured
+          - Permission mode matches security requirements
+          - Structured outputs validated with JSON Schema
+        verification_cn: Agent 是否能正确启动和响应？Hooks 和权限是否按预期工作？
+        verification_en: Can agents start and respond correctly? Do hooks and permissions work as expected?
+
+      - id: evaluate
+        name_cn: 评测验证
+        name_en: Evaluation & Testing
+        mode: solo
+        description_cn: 用 LLM-as-Judge 和多维评分量表系统性评测 Agent 质量
+        description_en: Systematically evaluate agent quality using LLM-as-Judge and multi-dimensional rubrics
+        skills:
+          - neolab/B-Agent评测/01-Agent评测方法论
+        quality_cn: |
+          - 五维评分量表覆盖指令遵循、完整性、效率、推理、连贯性
+          - 测试集跨复杂度分层（简单、中等、复杂）
+          - 偏差缓解措施到位（位置交换、长度归一化）
+          - 通过阈值（加权分 ≥ 3.5/5.0）
+        quality_en: |
+          - Five-dimension rubric covers instruction following, completeness, efficiency, reasoning, coherence
+          - Test set stratified across complexity levels
+          - Bias mitigation measures in place (position swap, length normalization)
+          - Passing threshold met (weighted score ≥ 3.5/5.0)
+        verification_cn: 各维度评分是否达标？是否检测并缓解了评测偏差？
+        verification_en: Do all dimension scores meet threshold? Is evaluation bias detected and mitigated?
+
       - id: review
         name_cn: 评审
         name_en: Review
         mode: multi
-        description_cn: 对 Agent 系统进行两阶段评审
-        description_en: Two-phase review of the agent system
+        description_cn: 对 Agent 系统进行两阶段评审，确认协作正确性
+        description_en: Two-phase review of the agent system, verify collaboration correctness
         skills:
           - superpowers/C-代码评审/01-请求代码评审
           - superpowers/C-代码评审/02-接收代码评审

@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import SceneCard from '../../components/SceneCard.astro';
+import { getCategoriesWithCounts } from '../../lib/skills';
+
+const lang = 'cn';
+const categories = getCategoriesWithCounts(lang);
+
+const pipeline = categories
+  .filter(c => c.phase === 'pipeline')
+  .sort((a, b) => a.order - b.order);
+
+const specialist = categories
+  .filter(c => c.phase === 'specialist')
+  .sort((a, b) => a.order - b.order);
+---
+
+<Base title="场景浏览" description="按使用场景浏览所有 Claude Code 技能 — 开发流水线 + 专项领域" keywords="claude code skills, ai skills by scenario, claude code categories, development pipeline" lang={lang}>
+  <div class="max-w-6xl mx-auto px-8 py-16">
+
+    <!-- Pipeline -->
+    <section>
+      <h1 class="text-3xl font-extrabold tracking-tight text-text-primary">开发流水线</h1>
+      <p class="text-base text-text-secondary mt-3">
+        按工作阶段浏览，从构思到交付的完整链路
+      </p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+        {pipeline.map(cat => (
+          <SceneCard
+            id={cat.id}
+            name={cat.name_cn}
+            icon={cat.icon}
+            description={cat.description_cn}
+            skillCount={cat.skillCount || 0}
+            mode={cat.mode}
+            order={cat.order}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="my-16 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+
+    <!-- Specialist -->
+    <section>
+      <h2 class="text-3xl font-extrabold tracking-tight text-text-primary">专项技能</h2>
+      <p class="text-base text-text-secondary mt-3">
+        独立领域的专业技能，按需使用
+      </p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+        {specialist.map(cat => (
+          <SceneCard
+            id={cat.id}
+            name={cat.name_cn}
+            icon={cat.icon}
+            description={cat.description_cn}
+            skillCount={cat.skillCount || 0}
+            mode={cat.mode}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>

@@ -96,7 +96,19 @@ const workflows = cnWorkflows.map(wf => {
         mode: step.mode,
         description_cn: step.description_cn,
         description_en: enStep?.description_en || step.description_en || step.description_cn,
+        quality_cn: step.quality_cn || '',
+        quality_en: enStep?.quality_en || step.quality_en || step.quality_cn || '',
+        verification_cn: step.verification_cn || '',
+        verification_en: enStep?.verification_en || step.verification_en || step.verification_cn || '',
         skillCount: step.resolvedSkills?.length || 0,
+        resolvedSkills: (step.resolvedSkills || []).map(sk => ({
+          title_cn: sk.title,
+          title_en: (sk.pairedId ? enSkillById.get(sk.pairedId)?.title : undefined) || sk.title,
+          source: sk.source,
+          slug_cn: sk.slug,
+          slug_en: sk.pairedId ? enSkillById.get(sk.pairedId)?.slug : undefined,
+          rawContent: sk.rawContent,
+        })),
       };
     }),
   };

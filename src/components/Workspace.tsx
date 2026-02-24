@@ -44,6 +44,15 @@ interface SceneInfo {
   icon: string;
 }
 
+interface ResolvedSkillSummary {
+  title_cn: string;
+  title_en: string;
+  source: string;
+  slug_cn: string;
+  slug_en?: string;
+  rawContent: string;
+}
+
 interface WorkflowStepSummary {
   id: string;
   name_cn: string;
@@ -51,7 +60,12 @@ interface WorkflowStepSummary {
   mode: string;
   description_cn: string;
   description_en: string;
+  quality_cn: string;
+  quality_en: string;
+  verification_cn: string;
+  verification_en: string;
   skillCount: number;
+  resolvedSkills: ResolvedSkillSummary[];
 }
 
 interface WorkflowSummary {
@@ -264,6 +278,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
   const [carouselIdx, setCarouselIdx] = useState(0);
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<string | null>(null);
   const [navSlot, setNavSlot] = useState<HTMLElement | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -356,6 +371,14 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
     const hash = window.location.hash.slice(1);
     if (hash === 'workflows') {
       setActiveView('workflows');
+    } else if (hash.startsWith('workflows/')) {
+      const wfId = hash.split('/')[1];
+      if (wfId && workflows.some(w => w.id === wfId)) {
+        setActiveView('workflows');
+        setSelectedWorkflow(wfId);
+      } else {
+        setActiveView('workflows');
+      }
     } else if (hash) {
       const scene = scenes.find(s => s.id === hash);
       if (scene) {
@@ -380,7 +403,11 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
   // URL hash sync — write on state change
   useEffect(() => {
     if (activeView === 'workflows') {
-      window.history.replaceState(null, '', '#workflows');
+      if (selectedWorkflow) {
+        window.history.replaceState(null, '', `#workflows/${selectedWorkflow}`);
+      } else {
+        window.history.replaceState(null, '', '#workflows');
+      }
     } else if (selectedScene !== 'all' && selectedCategory) {
       window.history.replaceState(null, '', `#${selectedScene}/${selectedCategory}`);
     } else if (selectedScene !== 'all') {
@@ -388,7 +415,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
     } else {
       window.history.replaceState(null, '', window.location.pathname);
     }
-  }, [selectedScene, selectedCategory, activeView]);
+  }, [selectedScene, selectedCategory, activeView, selectedWorkflow]);
 
   // ⌘K shortcut
   useEffect(() => {
@@ -438,6 +465,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
       window.location.href = '/about';
     } else {
       setActiveView(tabId as ActiveView);
+      if (tabId === 'workflows') setSelectedWorkflow(null);
       scrollRef.current?.scrollTo({ top: 0 });
     }
   };
@@ -649,15 +677,19 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
           <div class="p-4 space-y-1">
             <p class="text-[11px] text-text-tertiary font-medium px-3 uppercase tracking-wider mb-2">{t(lang, 'wf.list')}</p>
             {workflows.map(wf => (
-              <a
+              <button
                 key={wf.id}
-                href={`/workflows/${wf.id}`}
-                class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-text-primary hover:bg-surface-alt/80 transition-all duration-200"
+                onClick={() => { setSelectedWorkflow(wf.id); scrollRef.current?.scrollTo({ top: 0 }); }}
+                class={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 cursor-pointer ${
+                  selectedWorkflow === wf.id
+                    ? 'text-accent bg-accent-muted font-medium'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-surface-alt/80'
+                }`}
               >
                 <IconSvg name={wf.icon} size={15} className="shrink-0 opacity-60" />
                 <span class="flex-1 text-left truncate">{pick(wf, 'name', lang)}</span>
-                <span class="text-xs text-text-tertiary">{wf.stepCount} {t(lang, 'ui.nStep')}</span>
-              </a>
+                <span class="text-xs text-text-tertiary">{wf.stepCount}{t(lang, 'ui.nStep')}</span>
+              </button>
             ))}
           </div>
         )}
@@ -861,27 +893,37 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
         {/* ===== Workflows View ===== */}
         {activeView === 'workflows' && (
           <div class="flex-1 overflow-y-auto" ref={scrollRef}>
-            <div class="p-4 sm:p-6">
-              <div class="mb-8">
-                <h1 class="text-xl font-bold text-text-primary">{t(lang, 'wf.title')}</h1>
-                <p class="text-sm text-text-secondary mt-1">
-                  {t(lang, 'wf.desc')}
-                </p>
-              </div>
-
-              <div class="grid sm:grid-cols-2 gap-4">
-                {workflows.map(wf => (
-                  <WorkflowCard key={wf.id} workflow={wf} lang={lang} />
-                ))}
-              </div>
-
-              {workflows.length === 0 && (
-                <div class="flex flex-col items-center justify-center py-20 text-text-tertiary">
-                  <IconSvg name="rocket" size={32} className="mb-3 opacity-40" />
-                  <p class="text-sm">{t(lang, 'ui.noWorkflows')}</p>
+            {!selectedWorkflow ? (
+              /* --- Workflow List --- */
+              <div class="p-4 sm:p-6">
+                <div class="mb-8">
+                  <h1 class="text-xl font-bold text-text-primary">{t(lang, 'wf.title')}</h1>
+                  <p class="text-sm text-text-secondary mt-1">
+                    {t(lang, 'wf.desc')}
+                  </p>
                 </div>
-              )}
-            </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                  {workflows.map(wf => (
+                    <WorkflowCardInline key={wf.id} workflow={wf} lang={lang} onSelect={() => { setSelectedWorkflow(wf.id); scrollRef.current?.scrollTo({ top: 0 }); }} />
+                  ))}
+                </div>
+
+                {workflows.length === 0 && (
+                  <div class="flex flex-col items-center justify-center py-20 text-text-tertiary">
+                    <IconSvg name="rocket" size={32} className="mb-3 opacity-40" />
+                    <p class="text-sm">{t(lang, 'ui.noWorkflows')}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* --- Workflow Detail (inline) --- */
+              <WorkflowDetail
+                workflow={workflows.find(w => w.id === selectedWorkflow)!}
+                lang={lang}
+                onBack={() => setSelectedWorkflow(null)}
+              />
+            )}
           </div>
         )}
       </div>
@@ -947,13 +989,13 @@ function SkillCard({ skill, lang }: { skill: SkillSummary; lang: Lang }) {
   );
 }
 
-// --- Workflow Card ---
+// --- Workflow Card (inline, onClick instead of link) ---
 
-function WorkflowCard({ workflow, lang }: { workflow: WorkflowSummary; lang: Lang }) {
+function WorkflowCardInline({ workflow, lang, onSelect }: { workflow: WorkflowSummary; lang: Lang; onSelect: () => void }) {
   return (
-    <a
-      href={`/workflows/${workflow.id}`}
-      class="block rounded-2xl border border-border/60 bg-surface hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 group overflow-hidden"
+    <button
+      onClick={onSelect}
+      class="w-full text-left rounded-2xl border border-border/60 bg-surface hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 group overflow-hidden cursor-pointer"
     >
       <div class="p-5 pb-4">
         <div class="flex items-start gap-3">
@@ -1005,6 +1047,171 @@ function WorkflowCard({ workflow, lang }: { workflow: WorkflowSummary; lang: Lan
           {t(lang, 'ui.viewDetail')} <IconSvg name="chevron-right" size={12} />
         </span>
       </div>
-    </a>
+    </button>
+  );
+}
+
+// --- Workflow Detail (inline in main area) ---
+
+const MODE_LABELS: Record<string, Record<Lang, string>> = {
+  solo: { cn: 'Solo', en: 'Solo' },
+  multi: { cn: '多人协作', en: 'Multi-Agent' },
+  'solo-or-multi': { cn: '可多人', en: 'Solo or Multi' },
+};
+
+function WorkflowDetail({ workflow, lang, onBack }: { workflow: WorkflowSummary; lang: Lang; onBack: () => void }) {
+  const allContent = workflow.steps
+    .flatMap(step => step.resolvedSkills?.map(s => s.rawContent) || [])
+    .join('\n\n---\n\n');
+  const skillCount = workflow.steps.reduce((sum, s) => sum + s.skillCount, 0);
+
+  return (
+    <div class="p-4 sm:p-6">
+      {/* Back button (visible on mobile where sidebar is hidden) */}
+      <button
+        onClick={onBack}
+        class="lg:hidden flex items-center gap-1 text-sm text-text-tertiary hover:text-accent transition-colors duration-200 mb-4 cursor-pointer"
+      >
+        <IconSvg name="arrow-left" size={14} />
+        {lang === 'cn' ? '返回工作流列表' : 'Back to workflows'}
+      </button>
+
+      {/* Header */}
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center text-text-secondary shrink-0">
+          <IconSvg name={workflow.icon} size={22} />
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-text-primary">
+              {pick(workflow, 'name', lang)}
+            </h1>
+            <span class={`text-xs px-2 py-0.5 rounded-full ${
+              workflow.coverage === 'full'
+                ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'
+                : 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400'
+            }`}>
+              {workflow.coverage === 'full'
+                ? (lang === 'cn' ? '完整覆盖' : 'Full Coverage')
+                : (lang === 'cn' ? '部分覆盖' : 'Partial')}
+            </span>
+          </div>
+          <p class="text-sm text-text-secondary mt-1.5">
+            {pick(workflow, 'description', lang)}
+          </p>
+        </div>
+      </div>
+
+      {/* Entry / Exit */}
+      <div class="mt-6 grid sm:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-gradient-to-r from-accent/5 to-transparent border-l-4 border-accent">
+          <p class="text-xs text-text-tertiary font-medium mb-1">
+            {lang === 'cn' ? '入口条件' : 'Entry Condition'}
+          </p>
+          <p class="text-sm text-text-primary">{pick(workflow, 'entry', lang)}</p>
+        </div>
+        <div class="p-4 rounded-xl bg-gradient-to-r from-emerald-500/5 to-transparent border-l-4 border-emerald-500">
+          <p class="text-xs text-text-tertiary font-medium mb-1">
+            {lang === 'cn' ? '交付物' : 'Deliverables'}
+          </p>
+          <p class="text-sm text-text-primary">{pick(workflow, 'exit', lang)}</p>
+        </div>
+      </div>
+
+      {/* Copy All */}
+      {allContent && (
+        <div class="mt-6">
+          <CopyBtn
+            text={allContent}
+            label={lang === 'cn' ? `复制全部 ${skillCount} 个技能` : `Copy all ${skillCount} skills`}
+            copiedLabel={t(lang, 'ui.copied')}
+            variant="primary"
+          />
+        </div>
+      )}
+
+      {/* Steps */}
+      <div class="mt-10">
+        <h2 class="text-lg font-bold tracking-tight text-text-primary mb-6">
+          {workflow.stepCount} {lang === 'cn' ? '个步骤' : 'Steps'}
+        </h2>
+
+        <div class="space-y-4">
+          {workflow.steps.map((step, i) => (
+            <div key={step.id} class="relative">
+              {i < workflow.steps.length - 1 && (
+                <div class="absolute left-5 top-[calc(100%)] w-px h-4 bg-gradient-to-b from-border to-transparent" />
+              )}
+
+              <div class="p-5 rounded-2xl border border-border/60 hover:border-accent/20 transition-colors duration-300">
+                <div class="flex items-center gap-3">
+                  <span class="shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 text-accent text-sm font-semibold flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-base font-semibold text-text-primary">
+                        {pick(step, 'name', lang)}
+                      </h3>
+                      <span class={`text-xs px-2 py-0.5 rounded-full ${
+                        step.mode === 'multi' || step.mode === 'solo-or-multi'
+                          ? 'bg-accent-muted text-accent'
+                          : 'bg-surface-alt text-text-tertiary'
+                      }`}>
+                        {MODE_LABELS[step.mode]?.[lang] || step.mode}
+                      </span>
+                    </div>
+                    <p class="text-sm text-text-secondary mt-0.5">
+                      {pick(step, 'description', lang)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Skills */}
+                {step.resolvedSkills && step.resolvedSkills.length > 0 && (
+                  <div class="mt-4 flex flex-wrap gap-2">
+                    {step.resolvedSkills.map(skill => (
+                      <div key={skill.slug_cn} class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-alt border border-border/60">
+                        <a
+                          href={`/skills/${skill.source}/${lang === 'en' && skill.slug_en ? skill.slug_en : skill.slug_cn}`}
+                          class="text-sm text-text-primary hover:text-accent transition-colors duration-200"
+                        >
+                          {lang === 'cn' ? skill.title_cn : (skill.title_en || skill.title_cn)}
+                        </a>
+                        <CopyBtn text={skill.rawContent} label="Copy" copiedLabel={t(lang, 'ui.copied')} variant="secondary" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Quality criteria */}
+                {(step.quality_cn || step.quality_en) && (
+                  <div class="mt-4">
+                    <p class="text-xs font-medium text-text-secondary mb-1.5">
+                      {lang === 'cn' ? '质量标准' : 'Quality Criteria'}
+                    </p>
+                    <div class="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
+                      {(lang === 'cn' ? step.quality_cn : (step.quality_en || step.quality_cn)).trim()}
+                    </div>
+                  </div>
+                )}
+
+                {/* Verification gate */}
+                {(step.verification_cn || step.verification_en) && (
+                  <div class="mt-4 p-3 rounded-xl bg-gradient-to-r from-accent/5 to-transparent border border-accent/10">
+                    <p class="text-xs font-medium text-accent mb-1">
+                      {lang === 'cn' ? '验证门' : 'Verification Gate'}
+                    </p>
+                    <p class="text-sm text-text-secondary">
+                      {lang === 'cn' ? step.verification_cn : (step.verification_en || step.verification_cn)}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

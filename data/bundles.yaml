@@ -7,10 +7,10 @@ bundles:
     description_en: Starting from scratch? This bundle establishes the right development discipline
     skills:
       - superpowers/A-开发方法论/01-测试驱动开发-TDD
-      - superpowers/E-Git工作流/01-Git-Worktree工作流
-      - bear2u-skills/A-项目初始化/01-全栈项目生成器
-    why_cn: TDD 保证代码质量，Git Worktree 隔离工作流，项目生成器快速搭建骨架
-    why_en: TDD ensures code quality, Git Worktree isolates workflows, generator scaffolds quickly
+      - superpowers/E-Git工作流/01-使用Git-Worktrees
+      - curated/A-项目搭建/01-通用项目脚手架
+    why_cn: TDD 保证代码质量，Git Worktree 隔离工作流，通用脚手架快速搭建骨架
+    why_en: TDD ensures code quality, Git Worktree isolates workflows, scaffold sets up project structure
 
   - id: debug-session
     name_cn: 系统化调试
@@ -43,11 +43,11 @@ bundles:
     description_cn: 开发多 Agent 系统的完整方法论
     description_en: Complete methodology for developing multi-agent systems
     skills:
-      - superpowers/D-Agent编排/01-并行子任务调度
-      - superpowers/D-Agent编排/02-子Agent驱动开发
-      - bear2u-skills/C-AI工程与提示词/03-MCP服务器构建器
-    why_cn: 并行调度提效，子 Agent 解耦，MCP 标准化接口
-    why_en: Parallel dispatch for efficiency, sub-agent decoupling, MCP for standard interfaces
+      - superpowers/D-Agent编排/01-并行代理调度
+      - superpowers/D-Agent编排/02-子代理驱动开发
+      - anthropics/A-官方技能/03-MCP构建器
+    why_cn: 并行调度提效，子代理解耦，MCP 标准化接口
+    why_en: Parallel dispatch for efficiency, subagent decoupling, MCP for standard interfaces
 
   - id: frontend-project
     name_cn: 前端项目
@@ -56,11 +56,11 @@ bundles:
     description_cn: 前端项目从设计到组件的完整工作流
     description_en: Complete frontend workflow from design to components
     skills:
-      - bear2u-skills/B-设计与UI/01-设计提示词生成器
-      - claudekit/B-前端开发/01-React-Next.js全栈开发
-      - claudekit/B-前端开发/02-Vue-Nuxt全栈开发
-    why_cn: 先用设计生成器出方案，再按框架技能落地
-    why_en: Generate design with prompt generator, then implement with framework skills
+      - bear2u-skills/C-AI工程与提示词/01-设计提示生成器
+      - claudekit/B-前端开发/02-前端开发
+      - claudekit/B-前端开发/05-Web框架
+    why_cn: 先用设计生成器出方案，再按 React 和 Next.js 技能落地
+    why_en: Generate design with prompt generator, then implement with React and Next.js skills
 
   - id: content-creation
     name_cn: 内容创作
@@ -69,8 +69,21 @@ bundles:
     description_cn: 高质量内容生产的完整工具链
     description_en: Complete toolchain for high-quality content production
     skills:
-      - bear2u-skills/D-内容与文档/01-博客文章生成器
-      - composio/B-设计与内容/02-品牌设计与素材生成
-      - composio/C-营销与商业/01-SEO关键词研究与优化
-    why_cn: 博客生成内容，品牌工具统一视觉，SEO 确保被发现
-    why_en: Blog generator for content, brand tools for visuals, SEO for discoverability
+      - composio/C-营销与商业/02-内容研究写作
+      - humanizer/A-内容创作/01-AI文本人性化
+      - curated/F-技术写作/01-技术文档写作
+    why_cn: 内容研究写作输出草稿，Humanizer 去 AI 腔，技术文档保证专业
+    why_en: Content research for drafts, Humanizer removes AI patterns, tech docs for professionalism
+
+  - id: error-prevention
+    name_cn: 错误预防
+    name_en: Error Prevention
+    icon: "shield"
+    description_cn: 减少 AI 开发犯错的防御性工具组合
+    description_en: Defensive toolkit to reduce AI-assisted development mistakes
+    skills:
+      - curated/C-错误预防/01-AI编码防错清单
+      - jeffallan/H-安全编码/01-安全编码守卫
+      - curated/C-错误预防/02-依赖安全审计
+    why_cn: AI 防错清单避免常见陷阱，安全编码防护 OWASP 漏洞，依赖审计保障供应链
+    why_en: AI anti-patterns avoid pitfalls, secure coding prevents OWASP vulns, dep audit protects supply chain
