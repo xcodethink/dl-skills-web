@@ -275,6 +275,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
   const [selectedScene, setSelectedScene] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [platformFilter, setPlatformFilter] = useState<'all' | 'cc' | 'general'>('all');
   const [carouselIdx, setCarouselIdx] = useState(0);
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -327,7 +328,11 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
     return () => clearInterval(timer);
   }, [featured.length]);
 
-  // Filtered skills (scene → category → search)
+  // Platform stats (CC vs General)
+  const ccCount = useMemo(() => skills.filter(s => s.compatibleWith.includes('claude-code') && !s.compatibleWith.includes('any')).length, [skills]);
+  const generalCount = useMemo(() => skills.length - ccCount, [skills, ccCount]);
+
+  // Filtered skills (scene → category → platform → search)
   const filteredSkills = useMemo(() => {
     let r = skills;
     // Scene filter
@@ -338,6 +343,12 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
     // Category filter
     if (selectedCategory) {
       r = r.filter(s => s.unifiedCategory === selectedCategory);
+    }
+    // Platform filter
+    if (platformFilter === 'cc') {
+      r = r.filter(s => s.compatibleWith.includes('claude-code') && !s.compatibleWith.includes('any'));
+    } else if (platformFilter === 'general') {
+      r = r.filter(s => s.compatibleWith.includes('any') || !s.compatibleWith.includes('claude-code'));
     }
     // Search filter
     if (searchQuery.trim()) {
@@ -351,7 +362,7 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
       );
     }
     return r;
-  }, [skills, categories, selectedScene, selectedCategory, searchQuery]);
+  }, [skills, categories, selectedScene, selectedCategory, platformFilter, searchQuery]);
 
   // Grouped skills (for browsing without search/category filter)
   const groupedSkills = useMemo(() => {
@@ -786,7 +797,13 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
                     </div>
                   </div>
                   <div class="relative flex items-center justify-between mt-2">
-                    <span class="text-[10px] text-text-tertiary">{skills.length} {t(lang, 'ui.nActivated')}</span>
+                    <span class="text-[10px] text-text-tertiary">
+                      {skills.length} {t(lang, 'ui.nActivated')}
+                      <span class="mx-1 opacity-40">·</span>
+                      <span class="text-blue-600 dark:text-blue-400">{ccCount}</span> {t(lang, 'ui.ccCount')}
+                      <span class="mx-1 opacity-40">·</span>
+                      <span>{generalCount}</span> {t(lang, 'ui.generalCount')}
+                    </span>
                     <CopyBtn text={MCP_CONFIG} label={t(lang, 'ui.copyConfig')} copiedLabel={t(lang, 'ui.copied')} variant="secondary" />
                   </div>
                 </div>
@@ -806,6 +823,26 @@ export default function Workspace({ skills, contentMap, categories, scenes, work
                     placeholder={t(lang, 'ui.search')}
                     class="w-full pl-9 pr-4 py-2.5 bg-surface-alt/60 border border-border/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-all duration-200 placeholder:text-text-tertiary"
                   />
+                </div>
+                {/* Platform filter toggle */}
+                <div class="flex items-center shrink-0">
+                  {(['all', 'cc', 'general'] as const).map(f => (
+                    <button
+                      key={f}
+                      onClick={() => setPlatformFilter(f)}
+                      class={`px-2.5 py-1.5 text-[11px] font-medium transition-all duration-200 cursor-pointer border whitespace-nowrap first:rounded-l-lg last:rounded-r-lg ${
+                        platformFilter === f
+                          ? f === 'cc'
+                            ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800'
+                            : f === 'general'
+                              ? 'bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-800/40 dark:text-gray-300 dark:border-gray-600'
+                              : 'bg-accent/10 text-accent border-accent/30'
+                          : 'bg-surface text-text-tertiary border-border/60 hover:text-text-secondary'
+                      }`}
+                    >
+                      {t(lang, `ui.filter${f.charAt(0).toUpperCase() + f.slice(1)}` as any)}
+                    </button>
+                  ))}
                 </div>
                 {/* Mobile category dropdown */}
                 <select

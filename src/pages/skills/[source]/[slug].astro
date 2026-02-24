@@ -26,6 +26,11 @@ const containingWorkflows = allWorkflows.filter(wf =>
 // Find paired skill for language switch link
 const pairedSkill = skill.pairedId ? getAllSkills().find(s => s.id === skill.pairedId) : undefined;
 
+const isCC = skill.compatibleWith.includes('claude-code') && !skill.compatibleWith.includes('any');
+const platformTag = isCC
+  ? (lang === 'cn' ? 'Claude Code 专属' : 'Claude Code Optimized')
+  : (lang === 'cn' ? '通用技能' : 'General Purpose');
+
 const typeLabels_cn: Record<string, string> = { discipline: '纪律型', tool: '工具型', process: '流程型', reference: '参考型' };
 const typeLabels_en: Record<string, string> = { discipline: 'Discipline', tool: 'Tool', process: 'Process', reference: 'Reference' };
 const diffLabels_cn: Record<string, string> = { starter: '入门', intermediate: '中级', advanced: '高级' };
@@ -89,8 +94,8 @@ const learningResourceSchema = {
 
 <Base
   title={skill.title}
-  description={`${skill.title} — ${skill.highlight || 'Claude Code Skill'}`}
-  keywords={`claude code, ${skill.tags.join(', ')}, ai skills, claude code ${skill.type}`}
+  description={`${skill.title} — [${platformTag}] ${skill.highlight || 'Claude Code Skill'}`}
+  keywords={`claude code, ${skill.tags.join(', ')}, ai skills, ${isCC ? 'claude code optimized' : 'general purpose'}, claude code ${skill.type}`}
   lang={lang}
   breadcrumbs={[
     { name: 'Home', url: '/' },
