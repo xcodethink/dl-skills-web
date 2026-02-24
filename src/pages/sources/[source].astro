@@ -75,6 +75,7 @@ const grouped = skills.reduce((acc, skill) => {
               type={skill.type}
               difficulty={skill.difficulty}
               tags={skill.tags}
+              compatibleWith={skill.compatibleWith}
               href={`/skills/${skill.source}/${skill.slug}`}
             />
           ))}

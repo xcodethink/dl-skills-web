@@ -8,9 +8,11 @@ interface Props {
   difficulty?: string;
   href: string;
   tags?: string[];
+  compatibleWith?: string[];
 }
 
-const { title, source, highlight, verified, type, difficulty, href, tags = [] } = Astro.props;
+const { title, source, highlight, verified, type, difficulty, href, tags = [], compatibleWith = ['claude-code'] } = Astro.props;
+const isClaudeCode = compatibleWith.includes('claude-code') && !compatibleWith.includes('any');
 
 const typeLabels_cn: Record<string, string> = {
   discipline: '纪律型',
@@ -46,11 +48,23 @@ const difficultyStyles: Record<string, string> = {
 <a href={href} class="block p-5 rounded-2xl border border-border/60 bg-surface hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 group">
   <div class="flex items-start justify-between gap-2">
     <h3 class="text-base font-semibold text-text-primary group-hover:text-accent transition-colors duration-200 line-clamp-1">{title}</h3>
-    {verified && (
-      <span class="shrink-0 text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 font-medium">
-        Verified
-      </span>
-    )}
+    <div class="flex items-center gap-1 shrink-0">
+      {verified && (
+        <span class="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 font-medium">
+          Verified
+        </span>
+      )}
+      {isClaudeCode ? (
+        <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 font-medium">
+          ⚡CC
+        </span>
+      ) : (
+        <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800/40 dark:text-gray-400 font-medium">
+          <span data-lang-cn>🌐通用</span>
+          <span data-lang-en>🌐General</span>
+        </span>
+      )}
+    </div>
   </div>
 
   {highlight && (

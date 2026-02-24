@@ -135,11 +135,17 @@ const learningResourceSchema = {
           <span data-lang-cn>{typeLabels_cn[skill.type] || skill.type}</span>
           <span data-lang-en>{typeLabels_en[skill.type] || skill.type}</span>
         </span>
-        {skill.compatibleWith.map(tool => (
-          <span class="text-xs px-2 py-0.5 rounded-full bg-accent-muted text-accent">
-            {tool}
+        {skill.compatibleWith.includes('claude-code') && !skill.compatibleWith.includes('any') ? (
+          <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 font-medium">
+            <span data-lang-cn>⚡ Claude Code 专属</span>
+            <span data-lang-en>⚡ Claude Code Optimized</span>
           </span>
-        ))}
+        ) : (
+          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800/40 dark:text-gray-400 font-medium">
+            <span data-lang-cn>🌐 通用技能</span>
+            <span data-lang-en>🌐 General Purpose</span>
+          </span>
+        )}
       </div>
 
       <div class="flex items-center gap-2 mt-3 text-xs text-text-tertiary">
@@ -214,6 +220,7 @@ const learningResourceSchema = {
               type={s.type}
               difficulty={s.difficulty}
               tags={s.tags}
+              compatibleWith={s.compatibleWith}
               href={`/skills/${s.source}/${s.slug}`}
             />
           ))}

@@ -949,11 +949,22 @@ function SkillCard({ skill, lang }: { skill: SkillSummary; lang: Lang }) {
         <h3 class="text-sm font-semibold text-text-primary group-hover:text-accent transition-colors duration-200 line-clamp-1">
           {pick(skill, 'title', lang)}
         </h3>
-        {skill.verified && (
-          <span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 font-medium">
-            Verified
-          </span>
-        )}
+        <div class="flex items-center gap-1 shrink-0">
+          {skill.verified && (
+            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 font-medium">
+              Verified
+            </span>
+          )}
+          {skill.compatibleWith.includes('claude-code') && !skill.compatibleWith.includes('any') ? (
+            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 font-medium">
+              ⚡CC
+            </span>
+          ) : (
+            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800/40 dark:text-gray-400 font-medium">
+              🌐{lang === 'cn' ? '通用' : 'General'}
+            </span>
+          )}
+        </div>
       </div>
 
       {(skill.highlight_cn || skill.highlight_en) && (
