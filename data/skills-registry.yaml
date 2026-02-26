@@ -1,6 +1,6 @@
 # =============================================================================
 # DL Skills Registry - Complete Skill Index
-# Generated: 2026-02-21
+# Generated: 2026-02-26
 # =============================================================================
 # Sources:
 #   - superpowers (obra/superpowers) - verified: true
@@ -8,6 +8,10 @@
 #   - bear2u-skills (bear2u/my-skills) - verified: false
 #   - composio (ComposioHQ/awesome-claude-skills) - verified: false
 #   - dataviz (K-Dense-AI/claude-scientific-skills) - verified: false
+#   - vercel-skills (vercel-labs/agent-skills) - verified: true
+#   - vercel-next (vercel-labs/next-skills) - verified: true
+#   - prisma (prisma/skills) - verified: true
+#   - flutter (evanca/flutter-ai-rules) - verified: true
 # =============================================================================
 
 # =============================================================================
@@ -2212,3 +2216,162 @@ jeffallan/B-前端开发/01-React专家:
   highlight_cn: "React 19 专家：Server Components + use() Hook + 表单 Actions + 生产级架构"
   highlight_en: "React 19 expert: Server Components + use() Hook + form Actions + production-grade architecture"
   paired_en: jeffallan/B-Frontend/01-React-Expert
+
+# =============================================================================
+# VERCEL SKILLS (vercel-labs/agent-skills)
+# =============================================================================
+
+vercel-skills/A-React与前端/01-React性能最佳实践:
+  unifiedCategory: frontend
+  tags: [react, performance, waterfalls, bundle-size, re-render, memoization, vercel-official]
+  type: reference
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Vercel 官方 57 条 React 性能规则：消除瀑布流 + 包体优化 + 重渲染控制"
+  highlight_en: "Vercel official 57 React performance rules: eliminate waterfalls + bundle optimization + re-render control"
+  paired_en: vercel-skills/A-React-And-Frontend/01-React-Best-Practices
+
+vercel-skills/A-React与前端/02-React组合模式:
+  unifiedCategory: frontend
+  tags: [react, composition, compound-components, context, state-management, vercel-official]
+  type: reference
+  difficulty: advanced
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Vercel 官方组合模式：复合组件 + 状态提升 + 泛型 Context 依赖注入"
+  highlight_en: "Vercel official composition patterns: compound components + state lifting + generic context DI"
+  paired_en: vercel-skills/A-React-And-Frontend/02-Composition-Patterns
+
+vercel-skills/A-React与前端/03-React-Native最佳实践:
+  unifiedCategory: frontend
+  tags: [react-native, mobile, performance, lists, animation, expo, vercel-official]
+  type: reference
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Vercel 官方 35+ 条 React Native 规则：列表性能 + 动画 + UI 模式 + Monorepo"
+  highlight_en: "Vercel official 35+ React Native rules: list performance + animation + UI patterns + monorepo"
+  paired_en: vercel-skills/A-React-And-Frontend/03-React-Native-Skills
+
+# =============================================================================
+# VERCEL NEXT.JS (vercel-labs/next-skills)
+# =============================================================================
+
+vercel-next/A-Next.js核心/01-Next.js最佳实践:
+  unifiedCategory: frontend
+  tags: [nextjs, rsc, app-router, ssr, caching, metadata, vercel-official]
+  type: reference
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Vercel 官方 Next.js 最佳实践：RSC 边界 + 异步模式 + 路由处理器 + 自托管"
+  highlight_en: "Vercel official Next.js best practices: RSC boundaries + async patterns + route handlers + self-hosting"
+  paired_en: vercel-next/A-Next.js-Core/01-Next.js-Best-Practices
+
+vercel-next/A-Next.js核心/02-Next.js缓存组件:
+  unifiedCategory: frontend
+  tags: [nextjs, caching, ppr, use-cache, cache-tag, vercel-official]
+  type: reference
+  difficulty: advanced
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Vercel 官方缓存组件：PPR + use cache 指令 + cacheLife + cacheTag 精细控制"
+  highlight_en: "Vercel official cache components: PPR + use cache directive + cacheLife + cacheTag fine-grained control"
+  paired_en: vercel-next/A-Next.js-Core/02-Next.js-Cache-Components
+
+vercel-next/A-Next.js核心/03-Next.js版本升级:
+  unifiedCategory: frontend
+  tags: [nextjs, upgrade, migration, codemods, vercel-official]
+  type: process
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Vercel 官方 Next.js 升级指南：系统化流程 + Codemod + 版本差异速查"
+  highlight_en: "Vercel official Next.js upgrade guide: systematic process + codemod + version diff quick reference"
+  paired_en: vercel-next/A-Next.js-Core/03-Next.js-Upgrade
+
+# =============================================================================
+# PRISMA (prisma/skills)
+# =============================================================================
+
+prisma/A-Prisma核心/01-Prisma-CLI参考:
+  unifiedCategory: backend
+  tags: [prisma, cli, database, migrations, orm, prisma-official]
+  type: reference
+  difficulty: starter
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Prisma 官方 CLI 全命令参考：init/generate/migrate/dev + v7 配置变更"
+  highlight_en: "Prisma official CLI full reference: init/generate/migrate/dev + v7 config changes"
+  paired_en: prisma/A-Prisma-Core/01-Prisma-CLI
+
+prisma/A-Prisma核心/02-Prisma客户端API:
+  unifiedCategory: backend
+  tags: [prisma, client, crud, filters, transactions, orm, prisma-official]
+  type: reference
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Prisma 官方 Client API：CRUD + 过滤器 + 关系查询 + 事务 + 聚合"
+  highlight_en: "Prisma official Client API: CRUD + filters + relation queries + transactions + aggregation"
+  paired_en: prisma/A-Prisma-Core/02-Client-API
+
+prisma/A-Prisma核心/03-数据库配置:
+  unifiedCategory: backend
+  tags: [prisma, database, postgresql, mysql, sqlite, driver-adapter, prisma-official]
+  type: reference
+  difficulty: starter
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Prisma 官方数据库配置：6 大数据库 + v7 Driver Adapter 必须配置"
+  highlight_en: "Prisma official database setup: 6 databases + v7 driver adapter required configuration"
+  paired_en: prisma/A-Prisma-Core/03-Database-Setup
+
+prisma/A-Prisma核心/04-驱动适配器:
+  unifiedCategory: backend
+  tags: [prisma, driver-adapter, architecture, implementation, prisma-official]
+  type: reference
+  difficulty: advanced
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Prisma 官方驱动适配器实现指南：架构 + 接口 + 4 步实现 + 类型转换"
+  highlight_en: "Prisma official driver adapter implementation: architecture + interfaces + 4-step guide + type conversion"
+  paired_en: prisma/A-Prisma-Core/04-Driver-Adapters
+
+prisma/A-Prisma核心/05-Prisma-Postgres:
+  unifiedCategory: backend
+  tags: [prisma, postgres, serverless, managed-database, prisma-official]
+  type: reference
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Prisma 官方托管 Postgres：Console + CLI + Management API + SDK 工作流"
+  highlight_en: "Prisma official managed Postgres: Console + CLI + Management API + SDK workflows"
+  paired_en: prisma/A-Prisma-Core/05-Prisma-Postgres
+
+prisma/A-Prisma核心/06-升级到V7:
+  unifiedCategory: backend
+  tags: [prisma, upgrade, migration, v7, breaking-changes, prisma-official]
+  type: process
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Prisma 官方 v7 升级指南：破坏性变更 + 分步迁移 + ESM + 框架适配"
+  highlight_en: "Prisma official v7 upgrade guide: breaking changes + step-by-step migration + ESM + framework adaptation"
+  paired_en: prisma/A-Prisma-Core/06-Upgrade-V7
+
+# =============================================================================
+# FLUTTER (evanca/flutter-ai-rules)
+# =============================================================================
+
+flutter/A-Flutter核心/01-Flutter开发规范:
+  unifiedCategory: frontend
+  tags: [flutter, dart, architecture, state-management, testing, firebase, flutter-official]
+  type: reference
+  difficulty: intermediate
+  verified: true
+  compatibleWith: [claude-code]
+  highlight_cn: "Flutter 官方规则合集：架构 + Effective Dart + 状态管理 + 测试 + Firebase"
+  highlight_en: "Flutter official rules collection: architecture + Effective Dart + state management + testing + Firebase"
+  paired_en: flutter/A-Flutter-Core/01-Flutter-AI-Rules

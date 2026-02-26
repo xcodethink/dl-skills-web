@@ -121,6 +121,38 @@ sources:
     desc_en: "Massive skill collection — 63 skills covering full-stack dev, AI engineering, security, productivity"
     verified: false
 
+  - id: vercel-skills
+    name: Vercel React Skills
+    repo: vercel-labs/agent-skills
+    url: https://github.com/vercel-labs/agent-skills
+    desc_cn: "Vercel 官方 React 技能——57 条性能规则、组合模式、React Native 最佳实践"
+    desc_en: "Vercel official React skills — 57 performance rules, composition patterns, React Native best practices"
+    verified: true
+
+  - id: vercel-next
+    name: Vercel Next.js Skills
+    repo: vercel-labs/next-skills
+    url: https://github.com/vercel-labs/next-skills
+    desc_cn: "Vercel 官方 Next.js 技能——核心最佳实践、缓存组件、版本升级指南"
+    desc_en: "Vercel official Next.js skills — core best practices, cache components, version upgrade guide"
+    verified: true
+
+  - id: prisma
+    name: Prisma Official
+    repo: prisma/skills
+    url: https://github.com/prisma/skills
+    desc_cn: "Prisma 官方技能——CLI、客户端 API、数据库配置、驱动适配器、V7 升级"
+    desc_en: "Prisma official skills — CLI, client API, database setup, driver adapters, V7 upgrade"
+    verified: true
+
+  - id: flutter
+    name: Flutter Official
+    repo: flutter/flutter
+    url: https://github.com/flutter/flutter
+    desc_cn: "Flutter 官方 AI 规范——项目结构、Dart 最佳实践、状态管理、Material 3、无障碍"
+    desc_en: "Flutter official AI rules — project structure, Dart best practices, state management, Material 3, accessibility"
+    verified: true
+
   - id: curated
     name: DL Skills Curated
     repo: ""
