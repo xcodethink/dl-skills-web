@@ -90,14 +90,12 @@
 
 - **用途**：代码仓库，版本管理
 - **账号**：xcodethink
-- **仓库**：xcodethink/dl-skills-web（私有）
+- **仓库**：xcodethink/claudecodeSkills（公开）
 - **配置了什么**：
-  - 远程仓库：`origin` → `https://github.com/xcodethink/dl-skills-web.git`
+  - 远程仓库：`origin` → `https://github.com/xcodethink/claudecodeSkills.git`
   - 默认分支：main
-- **后台入口**：https://github.com/xcodethink/dl-skills-web
+- **后台入口**：https://github.com/xcodethink/claudecodeSkills
 - **费用**：免费
-- **注意事项**：
-  - 私有仓库，公开前需要清理敏感信息
 
 ---
 

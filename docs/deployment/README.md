@@ -8,7 +8,7 @@
 |------|-----|
 | 名称 | DL Skills Web (Claude Code Skills) |
 | 域名 | https://claudecodeskills.wayjet.io |
-| Git 仓库 | https://github.com/xcodethink/dl-skills-web.git |
+| Git 仓库 | https://github.com/xcodethink/claudecodeSkills.git |
 | 框架 | Astro 5 + Preact + Tailwind CSS 4 |
 | 渲染模式 | 静态生成 (SSG) |
 | 本地开发 | `npm run dev` → http://localhost:4321 |
@@ -22,7 +22,7 @@
 | Cloudflare Pages | 托管+CDN | project: dl-skills-web | Free | 主部署平台 |
 | Cloudflare D1 | 数据库 | dl-skills-pipeline | Free | 用于 pipeline 数据 |
 | Cloudflare DNS | 域名解析 | wayjet.io | 域名费用 | 子域名 claudecodeskills |
-| GitHub | 代码仓库 | xcodethink/dl-skills-web | Free | 私有仓库 |
+| GitHub | 代码仓库 | xcodethink/claudecodeSkills | Free | 公开仓库 |
 | Google Search Console | SEO | claudecodeskills.wayjet.io | Free | 验证文件: googlee7d411e5daf292f1.html |
 
 ---
