@@ -38,9 +38,10 @@ const currentPath = Astro.url.pathname;
 
 const navItems = [
   { href: '/', label_cn: '技能', label_en: 'Skills' },
-  { href: '/#workflows', label_cn: '工作流', label_en: 'Workflows' },
+  { href: '/guides', label_cn: '指南', label_en: 'Guides' },
+  { href: '/blog', label_cn: '博客', label_en: 'Blog' },
+  { href: '/faq', label_cn: 'FAQ', label_en: 'FAQ' },
   { href: '/setup', label_cn: '接入', label_en: 'Setup' },
-  { href: '/about', label_cn: '关于', label_en: 'About' },
 ];
 
 // BreadcrumbList JSON-LD
@@ -203,6 +204,18 @@ const websiteSchema = {
           <p class="text-sm text-text-tertiary mt-1">Battle-tested AI skill library</p>
         </div>
         <div class="flex items-center gap-6">
+          <a href="/guides" class="text-sm text-text-secondary hover:text-accent transition-colors duration-200">
+            <span data-lang-cn>场景指南</span>
+            <span data-lang-en>Guides</span>
+          </a>
+          <a href="/blog" class="text-sm text-text-secondary hover:text-accent transition-colors duration-200">
+            <span data-lang-cn>博客</span>
+            <span data-lang-en>Blog</span>
+          </a>
+          <a href="/faq" class="text-sm text-text-secondary hover:text-accent transition-colors duration-200">
+            <span data-lang-cn>FAQ</span>
+            <span data-lang-en>FAQ</span>
+          </a>
           <a href="/setup" class="text-sm text-text-secondary hover:text-accent transition-colors duration-200">
             <span data-lang-cn>快速接入</span>
             <span data-lang-en>Quick Setup</span>

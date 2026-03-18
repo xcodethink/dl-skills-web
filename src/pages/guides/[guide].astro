@@ -1,0 +1,200 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import SkillCard from '../../components/SkillCard.astro';
+import { loadGuides } from '../../lib/guides';
+import { getAllSkills } from '../../lib/skills';
+import { marked } from 'marked';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export function getStaticPaths() {
+  const guides = loadGuides();
+  return guides.map(g => ({ params: { guide: g.id } }));
+}
+
+const { guide: guideId } = Astro.params;
+const guides = loadGuides();
+const guide = guides.find(g => g.id === guideId)!;
+const allSkills = getAllSkills();
+
+// Resolve skill references
+const resolvedSkills = guide.skills
+  .map(skillKey => {
+    const cnSkill = allSkills.find(s => s.id === skillKey && s.language === 'cn');
+    const enSkill = cnSkill?.pairedId
+      ? allSkills.find(s => s.id === cnSkill.pairedId && s.language === 'en')
+      : undefined;
+    return { cn: cnSkill, en: enSkill };
+  })
+  .filter(s => s.cn || s.en);
+
+// Load guide content (markdown)
+const CONTENT_DIR = path.resolve(import.meta.dirname, '../../../content');
+const cnPath = path.join(CONTENT_DIR, 'guides-cn', `${guideId}.md`);
+const enPath = path.join(CONTENT_DIR, 'guides-en', `${guideId}.md`);
+const cnContent = fs.existsSync(cnPath) ? marked(fs.readFileSync(cnPath, 'utf-8')) : '';
+const enContent = fs.existsSync(enPath) ? marked(fs.readFileSync(enPath, 'utf-8')) : '';
+
+const SITE_URL = 'https://claudecodeskills.wayjet.io';
+
+const diffLabels: Record<string, { cn: string; en: string }> = {
+  starter: { cn: '入门', en: 'Starter' },
+  intermediate: { cn: '中级', en: 'Intermediate' },
+  advanced: { cn: '高级', en: 'Advanced' },
+};
+---
+
+<Base
+  title={`${guide.title_cn} | ${guide.title_en}`}
+  description={guide.description_en}
+  keywords={guide.tags.join(', ') + ', claude code, ai skills, guide'}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Guides', url: '/guides' },
+    { name: guide.title_en, url: `/guides/${guide.id}` },
+  ]}
+  hreflang={[
+    { lang: 'zh-CN', url: `${SITE_URL}/guides/${guide.id}` },
+    { lang: 'en', url: `${SITE_URL}/guides/${guide.id}` },
+  ]}
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": guide.title_en,
+      "description": guide.description_en,
+      "url": `${SITE_URL}/guides/${guide.id}`,
+      "totalTime": `PT${guide.estimatedMinutes}M`,
+      "tool": resolvedSkills.map(s => ({
+        "@type": "HowToTool",
+        "name": s.cn?.title || s.en?.title || '',
+      })),
+      "step": resolvedSkills.map((s, i) => ({
+        "@type": "HowToStep",
+        "position": i + 1,
+        "name": s.cn?.title || s.en?.title || '',
+        "text": s.cn?.highlight || s.en?.highlight || '',
+        "url": s.cn ? `${SITE_URL}/skills/${s.cn.source}/${s.cn.slug}` : undefined,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": guide.title_en,
+      "description": guide.description_en,
+      "url": `${SITE_URL}/guides/${guide.id}`,
+      "datePublished": guide.publishedAt,
+      "dateModified": guide.updatedAt,
+      "author": {
+        "@type": "Organization",
+        "name": "Claude Code Skills",
+        "url": SITE_URL,
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Claude Code Skills",
+        "url": SITE_URL,
+      },
+      "inLanguage": ["zh-CN", "en"],
+      "keywords": guide.tags.join(', '),
+    },
+  ]}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-8 py-12">
+    <!-- Back link -->
+    <a href="/guides" class="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-accent transition-colors duration-200 mb-8">
+      <Icon name="arrow-left" size={14} />
+      <span data-lang-cn>返回指南列表</span>
+      <span data-lang-en>Back to Guides</span>
+    </a>
+
+    <!-- Header -->
+    <div class="flex items-start gap-4 mb-8">
+      <div class="shrink-0 w-14 h-14 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <Icon name={guide.icon} size={28} />
+      </div>
+      <div>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary">
+          <span data-lang-cn>{guide.title_cn}</span>
+          <span data-lang-en>{guide.title_en}</span>
+        </h1>
+        <p class="text-base text-text-secondary mt-2">
+          <span data-lang-cn>{guide.description_cn}</span>
+          <span data-lang-en>{guide.description_en}</span>
+        </p>
+        <div class="flex items-center gap-3 mt-3">
+          <span class={`text-xs px-2 py-0.5 rounded-full ${
+            guide.difficulty === 'starter' ? 'text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/20' :
+            guide.difficulty === 'advanced' ? 'text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-900/20' :
+            'text-yellow-700 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/20'
+          }`}>
+            <span data-lang-cn>{diffLabels[guide.difficulty]?.cn}</span>
+            <span data-lang-en>{diffLabels[guide.difficulty]?.en}</span>
+          </span>
+          <span class="text-xs text-text-tertiary flex items-center gap-1">
+            <Icon name="clock" size={12} />
+            <span data-lang-cn>{guide.estimatedMinutes} 分钟</span>
+            <span data-lang-en>{guide.estimatedMinutes} min read</span>
+          </span>
+          <span class="text-xs text-text-tertiary">
+            {guide.publishedAt}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills used in this guide -->
+    <div class="mb-10 p-5 rounded-2xl border border-border/60 bg-surface-alt/30">
+      <h2 class="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
+        <Icon name="zap" size={14} class="text-amber-500" />
+        <span data-lang-cn>本指南使用的技能</span>
+        <span data-lang-en>Skills Used in This Guide</span>
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        {resolvedSkills.map(({ cn, en }) => {
+          const skill = cn || en;
+          if (!skill) return null;
+          return (
+            <SkillCard
+              title={skill.title}
+              source={skill.source}
+              highlight={skill.highlight}
+              verified={skill.verified}
+              type={skill.type}
+              difficulty={skill.difficulty}
+              href={`/skills/${skill.source}/${skill.slug}`}
+              tags={skill.tags}
+              compatibleWith={skill.compatibleWith}
+            />
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Guide content -->
+    {cnContent && (
+      <article class="prose prose-stone dark:prose-invert max-w-none" data-lang-cn set:html={cnContent} />
+    )}
+    {enContent && (
+      <article class="prose prose-stone dark:prose-invert max-w-none" data-lang-en set:html={enContent} />
+    )}
+
+    <!-- Bottom CTA -->
+    <div class="mt-16 p-8 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10 border border-emerald-200/50 dark:border-emerald-800/30 text-center">
+      <h3 class="text-lg font-bold text-text-primary">
+        <span data-lang-cn>准备好开始了吗？</span>
+        <span data-lang-en>Ready to get started?</span>
+      </h3>
+      <p class="text-sm text-text-secondary mt-2">
+        <span data-lang-cn>一键激活所有技能，30 秒完成配置</span>
+        <span data-lang-en>Activate all skills with one click — 30-second setup</span>
+      </p>
+      <a href="/setup" class="inline-flex items-center gap-2 mt-4 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors duration-200">
+        <Icon name="zap" size={16} />
+        <span data-lang-cn>快速接入</span>
+        <span data-lang-en>Quick Setup</span>
+      </a>
+    </div>
+  </div>
+</Base>

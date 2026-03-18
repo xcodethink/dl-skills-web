@@ -104,6 +104,30 @@ const cn = {
   'skill.workflows': '包含此技能的工作流',
   'skill.related': '相关技能',
 
+  // Guides
+  'nav.guides': '指南',
+  'guides.title': '场景指南',
+  'guides.desc': '说出你的目标，获得最佳技能组合',
+  'guides.backToList': '返回指南列表',
+  'guides.skillsUsed': '本指南使用的技能',
+  'guides.readyToStart': '准备好开始了吗？',
+  'guides.activateAll': '一键激活所有技能，30 秒完成配置',
+
+  // Blog
+  'nav.blog': '博客',
+  'blog.title': '博客',
+  'blog.desc': '关于 AI 辅助开发的洞察、教程和真实故事',
+  'blog.backToList': '返回博客',
+  'blog.moreArticles': '更多文章',
+  'blog.exploreSkills': '探索更多技能',
+
+  // FAQ
+  'nav.faq': 'FAQ',
+  'faq.title': '常见问题',
+  'faq.desc': '关于 Claude Code Skills 你想知道的一切',
+  'faq.stillHaveQuestions': '还有其他问题？',
+  'faq.askOnGithub': '在 GitHub 上提问',
+
   // About page
   'about.title': '关于',
   'about.desc': '一个人，一个 AI，一个技能库。CC Skills 背后的故事。',
@@ -216,6 +240,30 @@ const en: Record<keyof typeof cn, string> = {
   'skill.copyContent': 'Copy Content',
   'skill.workflows': 'Workflows containing this skill',
   'skill.related': 'Related Skills',
+
+  // Guides
+  'nav.guides': 'Guides',
+  'guides.title': 'Scenario Guides',
+  'guides.desc': 'Describe your goal, get the optimal skill combination',
+  'guides.backToList': 'Back to Guides',
+  'guides.skillsUsed': 'Skills Used in This Guide',
+  'guides.readyToStart': 'Ready to get started?',
+  'guides.activateAll': 'Activate all skills with one click — 30-second setup',
+
+  // Blog
+  'nav.blog': 'Blog',
+  'blog.title': 'Blog',
+  'blog.desc': 'Insights, tutorials, and real stories about AI-assisted development',
+  'blog.backToList': 'Back to Blog',
+  'blog.moreArticles': 'More Articles',
+  'blog.exploreSkills': 'Explore More Skills',
+
+  // FAQ
+  'nav.faq': 'FAQ',
+  'faq.title': 'Frequently Asked Questions',
+  'faq.desc': 'Everything you need to know about Claude Code Skills',
+  'faq.stillHaveQuestions': 'Still have questions?',
+  'faq.askOnGithub': 'Ask on GitHub',
 
   // About page
   'about.title': 'About',

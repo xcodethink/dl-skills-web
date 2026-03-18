@@ -1,0 +1,36 @@
+posts:
+  - id: why-curated-skills-matter
+    title_cn: 为什么"精选"比"大全"更重要——CC Skills 的策展哲学
+    title_en: "Why Curated Beats Comprehensive: The CC Skills Curation Philosophy"
+    description_cn: 网上有成百上千个 AI Skill，但大多数是垃圾。我们如何筛选、验证、组织这些技能，让你不用选择就能获得最佳实践。
+    description_en: There are hundreds of AI Skills online, but most are noise. Here's how we screen, verify, and organize skills so you get best practices without the decision fatigue.
+    author: Wayne
+    category: insight
+    tags: [curation, philosophy, best-practices]
+    featured: true
+    publishedAt: "2026-03-18"
+    updatedAt: "2026-03-18"
+
+  - id: tdd-with-claude-code
+    title_cn: TDD + Claude Code 实战：为什么测试驱动开发是 AI 编程的最佳纪律
+    title_en: "TDD + Claude Code in Practice: Why Test-Driven Development Is the Best AI Coding Discipline"
+    description_cn: 很多人让 AI 写代码不写测试。这是最大的错误。本文用真实案例展示 TDD 如何让 Claude Code 的输出质量提升 3 倍。
+    description_en: Many people let AI write code without tests. This is the biggest mistake. Real-world cases showing how TDD triples Claude Code output quality.
+    author: Wayne
+    category: tutorial
+    tags: [tdd, testing, discipline, claude-code]
+    featured: true
+    publishedAt: "2026-03-18"
+    updatedAt: "2026-03-18"
+
+  - id: zero-to-production-story
+    title_cn: 从零代码基础到独立交付 14 个产品——我的 AI 编程之路
+    title_en: "From Zero Coding to 14 Shipped Products: My AI-Assisted Development Journey"
+    description_cn: 一个 25 年市场营销人，如何在 3 个月内用 Claude Code 交付 14 个产品级软件。不是教程，是真实的踩坑和方法论总结。
+    description_en: How a 25-year marketing veteran shipped 14 production-grade products with Claude Code in 3 months. Not a tutorial — real lessons and methodology.
+    author: Wayne
+    category: story
+    tags: [journey, no-code-background, productivity, inspiration]
+    featured: true
+    publishedAt: "2026-03-18"
+    updatedAt: "2026-03-18"

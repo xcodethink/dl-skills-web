@@ -1,0 +1,124 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { loadGuides } from '../../lib/guides';
+
+const guides = loadGuides();
+
+const difficultyStyles: Record<string, string> = {
+  starter: 'text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-900/20',
+  intermediate: 'text-yellow-700 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/20',
+  advanced: 'text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-900/20',
+};
+
+const diffLabels: Record<string, { cn: string; en: string }> = {
+  starter: { cn: '入门', en: 'Starter' },
+  intermediate: { cn: '中级', en: 'Intermediate' },
+  advanced: { cn: '高级', en: 'Advanced' },
+};
+---
+
+<Base
+  title="场景指南 | Scenario Guides"
+  description="Claude Code Skills scenario guides — pick your goal, get the right skill combination. From building SaaS to debugging production issues."
+  keywords="claude code guide, claude code tutorial, ai coding guide, claude code workflow, claude code best practices, scenario guide"
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Guides', url: '/guides' },
+  ]}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Claude Code Skills Scenario Guides",
+    "description": "Goal-driven guides that recommend the right skill combinations for specific development scenarios.",
+    "url": "https://claudecodeskills.wayjet.io/guides",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": guides.length,
+      "itemListElement": guides.map((g, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": g.title_en,
+        "url": `https://claudecodeskills.wayjet.io/guides/${g.id}`,
+      })),
+    },
+  }}
+>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-cyan-500/5"></div>
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-emerald-400/20 dark:bg-emerald-400/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-teal-400/15 dark:bg-teal-400/8 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-8 pt-24 pb-16 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-sm font-medium mb-6">
+        <Icon name="book-open" size={16} />
+        <span data-lang-cn>{guides.length} 篇场景指南</span>
+        <span data-lang-en>{guides.length} Scenario Guides</span>
+      </div>
+
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-text-primary">
+        <span data-lang-cn>场景指南</span>
+        <span data-lang-en>Scenario Guides</span>
+      </h1>
+      <p class="text-lg text-text-secondary mt-4 max-w-2xl mx-auto">
+        <span data-lang-cn>说出你的目标，获得最佳技能组合。每篇指南都是一个完整的行动方案——用哪些技能、按什么顺序、为什么这么搭配。</span>
+        <span data-lang-en>Describe your goal, get the optimal skill combination. Each guide is a complete action plan — which skills to use, in what order, and why this combination works.</span>
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-8 pb-20">
+    <div class="grid gap-6">
+      {guides.map(guide => (
+        <a
+          href={`/guides/${guide.id}`}
+          class="block p-6 rounded-2xl border border-border/60 bg-surface hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 group"
+        >
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              <Icon name={guide.icon} size={24} />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-3">
+                <h2 class="text-lg font-semibold text-text-primary group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
+                  <span data-lang-cn>{guide.title_cn}</span>
+                  <span data-lang-en>{guide.title_en}</span>
+                </h2>
+                {guide.featured && (
+                  <span class="shrink-0 text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 font-medium">
+                    <span data-lang-cn>推荐</span>
+                    <span data-lang-en>Featured</span>
+                  </span>
+                )}
+              </div>
+              <p class="text-sm text-text-secondary mt-2 line-clamp-2 leading-relaxed">
+                <span data-lang-cn>{guide.description_cn}</span>
+                <span data-lang-en>{guide.description_en}</span>
+              </p>
+              <div class="flex items-center gap-3 mt-3">
+                <span class={`text-xs px-2 py-0.5 rounded-full ${difficultyStyles[guide.difficulty]}`}>
+                  <span data-lang-cn>{diffLabels[guide.difficulty]?.cn}</span>
+                  <span data-lang-en>{diffLabels[guide.difficulty]?.en}</span>
+                </span>
+                <span class="text-xs text-text-tertiary flex items-center gap-1">
+                  <Icon name="clock" size={12} />
+                  {guide.estimatedMinutes} min
+                </span>
+                <span class="text-xs text-text-tertiary">
+                  {guide.skills.length} skills
+                </span>
+              </div>
+              {guide.tags.length > 0 && (
+                <div class="flex flex-wrap gap-1.5 mt-2.5">
+                  {guide.tags.slice(0, 4).map(tag => (
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-accent-muted text-accent">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>

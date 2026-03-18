@@ -1,0 +1,172 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { loadBlogPosts, getCategoryLabel } from '../../lib/blog';
+import { marked } from 'marked';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export function getStaticPaths() {
+  const posts = loadBlogPosts();
+  return posts.map(p => ({ params: { post: p.id } }));
+}
+
+const { post: postId } = Astro.params;
+const posts = loadBlogPosts();
+const post = posts.find(p => p.id === postId)!;
+
+// Load content
+const CONTENT_DIR = path.resolve(import.meta.dirname, '../../../content');
+const cnPath = path.join(CONTENT_DIR, 'blog-cn', `${postId}.md`);
+const enPath = path.join(CONTENT_DIR, 'blog-en', `${postId}.md`);
+const cnContent = fs.existsSync(cnPath) ? marked(fs.readFileSync(cnPath, 'utf-8')) : '';
+const enContent = fs.existsSync(enPath) ? marked(fs.readFileSync(enPath, 'utf-8')) : '';
+
+const SITE_URL = 'https://claudecodeskills.wayjet.io';
+
+// Find related posts (same category, excluding self)
+const relatedPosts = posts.filter(p => p.id !== post.id).slice(0, 2);
+---
+
+<Base
+  title={`${post.title_cn} | ${post.title_en}`}
+  description={post.description_en}
+  keywords={post.tags.join(', ') + ', claude code, ai skills, blog'}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Blog', url: '/blog' },
+    { name: post.title_en, url: `/blog/${post.id}` },
+  ]}
+  hreflang={[
+    { lang: 'zh-CN', url: `${SITE_URL}/blog/${post.id}` },
+    { lang: 'en', url: `${SITE_URL}/blog/${post.id}` },
+  ]}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title_en,
+    "description": post.description_en,
+    "url": `${SITE_URL}/blog/${post.id}`,
+    "datePublished": post.publishedAt,
+    "dateModified": post.updatedAt,
+    "author": {
+      "@type": "Person",
+      "name": post.author,
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Claude Code Skills",
+      "url": SITE_URL,
+    },
+    "inLanguage": ["zh-CN", "en"],
+    "keywords": post.tags.join(', '),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${post.id}`,
+    },
+  }}
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-8 py-12">
+    <!-- Back link -->
+    <a href="/blog" class="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-accent transition-colors duration-200 mb-8">
+      <Icon name="arrow-left" size={14} />
+      <span data-lang-cn>返回博客</span>
+      <span data-lang-en>Back to Blog</span>
+    </a>
+
+    <!-- Header -->
+    <header class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-xs px-2.5 py-1 rounded-full bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-400 font-medium">
+          <span data-lang-cn>{getCategoryLabel(post.category, 'cn')}</span>
+          <span data-lang-en>{getCategoryLabel(post.category, 'en')}</span>
+        </span>
+        {post.featured && (
+          <span class="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 font-medium">
+            <span data-lang-cn>推荐</span>
+            <span data-lang-en>Featured</span>
+          </span>
+        )}
+      </div>
+
+      <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary leading-tight">
+        <span data-lang-cn>{post.title_cn}</span>
+        <span data-lang-en>{post.title_en}</span>
+      </h1>
+
+      <p class="text-base text-text-secondary mt-3">
+        <span data-lang-cn>{post.description_cn}</span>
+        <span data-lang-en>{post.description_en}</span>
+      </p>
+
+      <div class="flex items-center gap-4 mt-4 text-sm text-text-tertiary">
+        <span class="font-medium">{post.author}</span>
+        <span>{post.publishedAt}</span>
+      </div>
+
+      <div class="h-px bg-gradient-to-r from-transparent via-border to-transparent mt-6"></div>
+    </header>
+
+    <!-- Blog content -->
+    {cnContent && (
+      <article class="prose prose-stone dark:prose-invert max-w-none" data-lang-cn set:html={cnContent} />
+    )}
+    {enContent && (
+      <article class="prose prose-stone dark:prose-invert max-w-none" data-lang-en set:html={enContent} />
+    )}
+
+    <!-- Tags -->
+    {post.tags.length > 0 && (
+      <div class="flex flex-wrap gap-2 mt-12 pt-8 border-t border-border/40">
+        {post.tags.map(tag => (
+          <span class="text-xs px-3 py-1.5 rounded-full bg-accent-muted text-accent">{tag}</span>
+        ))}
+      </div>
+    )}
+
+    <!-- Related posts -->
+    {relatedPosts.length > 0 && (
+      <div class="mt-12 pt-8 border-t border-border/40">
+        <h2 class="text-lg font-bold text-text-primary mb-4">
+          <span data-lang-cn>更多文章</span>
+          <span data-lang-en>More Articles</span>
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          {relatedPosts.map(rp => (
+            <a href={`/blog/${rp.id}`} class="block p-4 rounded-xl border border-border/60 bg-surface hover:border-violet-500/30 transition-all duration-200 group">
+              <h3 class="text-sm font-semibold text-text-primary group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                <span data-lang-cn>{rp.title_cn}</span>
+                <span data-lang-en>{rp.title_en}</span>
+              </h3>
+              <p class="text-xs text-text-tertiary mt-1">{rp.publishedAt}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Bottom CTA -->
+    <div class="mt-16 p-8 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/10 dark:to-purple-900/10 border border-violet-200/50 dark:border-violet-800/30 text-center">
+      <h3 class="text-lg font-bold text-text-primary">
+        <span data-lang-cn>探索更多技能</span>
+        <span data-lang-en>Explore More Skills</span>
+      </h3>
+      <p class="text-sm text-text-secondary mt-2">
+        <span data-lang-cn>100+ 经过实战验证的 Claude Code 技能等你发现</span>
+        <span data-lang-en>100+ battle-tested Claude Code skills waiting for you</span>
+      </p>
+      <div class="flex items-center justify-center gap-3 mt-4">
+        <a href="/" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold transition-colors duration-200">
+          <Icon name="zap" size={16} />
+          <span data-lang-cn>浏览技能</span>
+          <span data-lang-en>Browse Skills</span>
+        </a>
+        <a href="/guides" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-border bg-surface hover:bg-surface-alt text-text-primary text-sm font-semibold transition-colors duration-200">
+          <Icon name="book-open" size={16} />
+          <span data-lang-cn>场景指南</span>
+          <span data-lang-en>Guides</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</Base>

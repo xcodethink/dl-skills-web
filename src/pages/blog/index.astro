@@ -1,0 +1,120 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { loadBlogPosts, getCategoryLabel } from '../../lib/blog';
+
+const posts = loadBlogPosts();
+
+const categoryIcons: Record<string, string> = {
+  insight: 'sparkles',
+  tutorial: 'code',
+  story: 'heart',
+  update: 'zap',
+};
+---
+
+<Base
+  title="博客 | Blog"
+  description="Claude Code Skills blog — insights on AI-assisted development, skill curation philosophy, tutorials, and real-world stories from building with Claude Code."
+  keywords="claude code blog, ai coding tips, claude code tutorial, ai development insights, claude code best practices"
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Blog', url: '/blog' },
+  ]}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Claude Code Skills Blog",
+    "description": "Insights, tutorials, and stories about AI-assisted development with Claude Code.",
+    "url": "https://claudecodeskills.wayjet.io/blog",
+    "blogPost": posts.map(p => ({
+      "@type": "BlogPosting",
+      "headline": p.title_en,
+      "description": p.description_en,
+      "url": `https://claudecodeskills.wayjet.io/blog/${p.id}`,
+      "datePublished": p.publishedAt,
+      "dateModified": p.updatedAt,
+      "author": {
+        "@type": "Person",
+        "name": p.author,
+      },
+    })),
+  }}
+>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-purple-500/5 to-fuchsia-500/5"></div>
+    <div class="absolute top-0 right-1/4 w-96 h-96 bg-violet-400/20 dark:bg-violet-400/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-1/4 w-80 h-80 bg-fuchsia-400/15 dark:bg-fuchsia-400/8 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-8 pt-24 pb-16 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-400 text-sm font-medium mb-6">
+        <Icon name="file-text" size={16} />
+        <span data-lang-cn>{posts.length} 篇文章</span>
+        <span data-lang-en>{posts.length} Articles</span>
+      </div>
+
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-text-primary">
+        <span data-lang-cn>博客</span>
+        <span data-lang-en>Blog</span>
+      </h1>
+      <p class="text-lg text-text-secondary mt-4 max-w-2xl mx-auto">
+        <span data-lang-cn>关于 AI 辅助开发的洞察、教程和真实故事。从技能策展哲学到实战经验分享。</span>
+        <span data-lang-en>Insights, tutorials, and real stories about AI-assisted development. From skill curation philosophy to hands-on experience.</span>
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-8 pb-20">
+    <div class="grid gap-6">
+      {posts.map(post => (
+        <a
+          href={`/blog/${post.id}`}
+          class="block p-6 rounded-2xl border border-border/60 bg-surface hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-300 group"
+        >
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center text-violet-600 dark:text-violet-400">
+              <Icon name={categoryIcons[post.category] || 'file-text'} size={24} />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-3">
+                <h2 class="text-lg font-semibold text-text-primary group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors duration-200">
+                  <span data-lang-cn>{post.title_cn}</span>
+                  <span data-lang-en>{post.title_en}</span>
+                </h2>
+                {post.featured && (
+                  <span class="shrink-0 text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 font-medium">
+                    <span data-lang-cn>推荐</span>
+                    <span data-lang-en>Featured</span>
+                  </span>
+                )}
+              </div>
+              <p class="text-sm text-text-secondary mt-2 line-clamp-2 leading-relaxed">
+                <span data-lang-cn>{post.description_cn}</span>
+                <span data-lang-en>{post.description_en}</span>
+              </p>
+              <div class="flex items-center gap-3 mt-3">
+                <span class="text-xs px-2 py-0.5 rounded-full bg-surface-alt text-text-secondary">
+                  <span data-lang-cn>{getCategoryLabel(post.category, 'cn')}</span>
+                  <span data-lang-en>{getCategoryLabel(post.category, 'en')}</span>
+                </span>
+                <span class="text-xs text-text-tertiary">
+                  {post.author}
+                </span>
+                <span class="text-xs text-text-tertiary">
+                  {post.publishedAt}
+                </span>
+              </div>
+              {post.tags.length > 0 && (
+                <div class="flex flex-wrap gap-1.5 mt-2.5">
+                  {post.tags.slice(0, 4).map(tag => (
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-accent-muted text-accent">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>
