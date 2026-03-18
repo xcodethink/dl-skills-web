@@ -77,12 +77,12 @@ const TIER2_NOTABLE = new Set([
   'shadcn-ui',           // UI components
 ]);
 
-const TIER2_MIN_STARS = 2;
+const TIER2_MIN_STARS = 50;
 
 // =============================================================================
-// TIER 3: Community — General discovery, higher bar required
+// TIER 3: Community — General discovery, high bar required
 // =============================================================================
-const TIER3_MIN_STARS = 10;  // Raised from 3 to 10 — quality over quantity
+const TIER3_MIN_STARS = 200;  // Only proven repos — quality over quantity
 
 // =============================================================================
 // Search queries by tier
@@ -107,10 +107,10 @@ const SEARCH_QUERIES = {
   // Tier 2: Notable authors — targeted searches
   tier2: {
     repos: [
-      'claude-code skills in:name,description fork:false stars:>1',
-      'claude skills agent in:name fork:false stars:>1',
-      'claude-code topic:skills fork:false',
-      'codex skills agent in:name,description fork:false stars:>1',
+      'claude-code skills in:name,description fork:false stars:>50',
+      'claude skills agent in:name fork:false stars:>50',
+      'claude-code topic:skills fork:false stars:>20',
+      'codex skills agent in:name,description fork:false stars:>50',
     ],
     code: [
       'filename:SKILL.md path:skills/ "description"',
@@ -121,13 +121,13 @@ const SEARCH_QUERIES = {
     ],
   },
 
-  // Tier 3: Community discovery — broader but higher bar
+  // Tier 3: Community discovery — only proven high-quality repos
   tier3: {
     repos: [
-      'SKILL.md claude in:readme fork:false stars:>10',
-      'codex-cli skills in:name fork:false stars:>10',
-      'cursorrules AI coding in:name,description fork:false stars:>10',
-      'AI coding agent skills in:name fork:false stars:>20',
+      'SKILL.md claude in:readme fork:false stars:>200',
+      'codex-cli skills in:name fork:false stars:>200',
+      'cursorrules AI coding in:name,description fork:false stars:>200',
+      'AI coding agent skills in:name fork:false stars:>500',
     ],
     code: [
       // Troubleshooting content is rare and HIGH VALUE — search broadly
