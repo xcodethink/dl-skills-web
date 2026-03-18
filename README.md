@@ -174,6 +174,16 @@ cp cn/06-测试/测试驱动开发-TDD.md ~/.claude/skills/tdd/SKILL.md
 
 ---
 
+## Star History
+
+<a href="https://star-history.com/#xcodethink/claudecodeSkills&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=xcodethink/claudecodeSkills&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=xcodethink/claudecodeSkills&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=xcodethink/claudecodeSkills&type=Date" />
+ </picture>
+</a>
+
 ## License
 
 MIT License. Individual skills may retain their original licenses where specified.
