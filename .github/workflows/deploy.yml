@@ -3,19 +3,17 @@ name: Build & Deploy
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - 'pipeline/**'
-      - '.github/workflows/discover-skills.yml'
-      - '.github/workflows/health-check.yml'
-  # Also trigger when pipeline PR is merged (content changes)
-  pull_request:
-    types: [closed]
-    branches: [main]
+    paths:
+      - 'content/**'
+      - 'data/**'
+      - 'src/**'
+      - 'worker/**'
+      - 'package.json'
+      - 'astro.config.mjs'
+      - 'wrangler.jsonc'
 
 jobs:
   deploy:
-    # Only run on push, or on PR merge (not PR close without merge)
-    if: github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
