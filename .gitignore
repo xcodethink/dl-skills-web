@@ -1,24 +1,34 @@
-# build output
+# Website code (local only, not in public skills repo)
+src/
+pipeline/
+worker/
+functions/
+public/
+docs/
+content/
+data/
 dist/
-# generated types
 .astro/
-
-# dependencies
 node_modules/
+astro.config.mjs
+package.json
+package-lock.json
+tsconfig.json
+wrangler.jsonc
 
-# logs
+# Build artifacts
+*.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 
+# Private config
+.env*
+.vscode/
+.github/
 
-# environment variables
-.env
-.env.production
+# Internal scripts
+scripts/
 
-# macOS-specific files
+# OS
 .DS_Store
-
-# jetbrains setting folder
 .idea/
+Thumbs.db
