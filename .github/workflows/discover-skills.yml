@@ -1,8 +1,8 @@
-name: Discover New Skills
+name: Daily Skills Pipeline
 
 on:
   schedule:
-    - cron: '0 6 * * 1'       # Every Monday 6:00 UTC
+    - cron: '0 6 * * *'           # Every day at 6:00 UTC
   workflow_dispatch:
     inputs:
       channel:
@@ -15,11 +15,21 @@ on:
           - watchlist
           - search
           - awesome-lists
+      skip_discover:
+        description: 'Skip discovery stage (use for manual imports)'
+        required: false
+        default: false
+        type: boolean
+      skip_publish:
+        description: 'Skip publish stage (dry run)'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
-  discover:
+  daily-pipeline:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,10 +44,57 @@ jobs:
       - name: Install pipeline dependencies
         run: cd pipeline && npm ci
 
-      - name: Run discovery
-        run: cd pipeline && npx tsx src/discover.ts --channel=${{ inputs.channel || 'all' }}
+      - name: Run DB migration (add new columns if needed)
+        run: |
+          cd pipeline
+          for f in src/db/migrations/*.sql; do
+            if [ -f "$f" ]; then
+              echo "Applying migration: $f"
+              # Migration is applied via D1 REST API
+              node -e "
+                const fs = require('fs');
+                const sql = fs.readFileSync('$f', 'utf-8');
+                const statements = sql.split(';').filter(s => s.trim());
+                (async () => {
+                  for (const stmt of statements) {
+                    if (!stmt.trim()) continue;
+                    try {
+                      const res = await fetch(
+                        'https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT_ID}/d1/database/${process.env.D1_DATABASE_ID}/query',
+                        {
+                          method: 'POST',
+                          headers: { 'Authorization': 'Bearer ${process.env.CF_API_TOKEN}', 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ sql: stmt.trim() + ';' })
+                        }
+                      );
+                      const data = await res.json();
+                      if (!data.success) console.log('  Note:', JSON.stringify(data.errors));
+                      else console.log('  OK:', stmt.trim().slice(0, 60));
+                    } catch (e) { console.log('  Skip (may already exist):', e.message); }
+                  }
+                })();
+              "
+            fi
+          done
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
+
+      - name: Run daily pipeline (discover → analyze → refine → translate → publish)
+        run: |
+          cd pipeline
+          ARGS="--channel=${{ inputs.channel || 'all' }}"
+          if [ "${{ inputs.skip_discover }}" = "true" ]; then
+            ARGS="$ARGS --skip-discover"
+          fi
+          if [ "${{ inputs.skip_publish }}" = "true" ]; then
+            ARGS="$ARGS --skip-publish"
+          fi
+          npx tsx src/daily-pipeline.ts $ARGS
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}

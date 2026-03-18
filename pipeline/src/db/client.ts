@@ -96,6 +96,10 @@ export async function updateCandidateAnalysis(id: string, analysis: {
   scoreActionability: number;
   scoreUniqueness: number;
   scoreCompleteness: number;
+  scoreProblemAccumulation?: number;
+  scoreGranularity?: number;
+  scoreIntegrationFit?: number;
+  scoreOptimizationPotential?: number;
   scoreWeighted: number;
   aiRecommendation: string;
   suggestedCategory: string;
@@ -105,21 +109,38 @@ export async function updateCandidateAnalysis(id: string, analysis: {
   duplicateOf: string | null;
   summaryEn: string;
   summaryCn: string;
+  compatibleWith?: string | null;
+  compatibilityRationale?: string | null;
+  fragmentAction?: string | null;
+  mergeTarget?: string | null;
+  mergeContent?: string | null;
+  optimizationTargets?: string | null;
   status: string;
 }): Promise<void> {
   await execute(
     `UPDATE candidates SET
        analysis_json = ?, score_relevance = ?, score_structure = ?, score_actionability = ?,
        score_uniqueness = ?, score_completeness = ?, score_weighted = ?,
+       score_problem_accumulation = ?, score_granularity = ?, score_integration_fit = ?,
+       score_optimization_potential = ?,
        ai_recommendation = ?, suggested_category = ?, suggested_tags = ?,
        suggested_type = ?, suggested_difficulty = ?, duplicate_of = ?,
-       summary_en = ?, summary_cn = ?, status = ?, updated_at = datetime('now')
+       summary_en = ?, summary_cn = ?,
+       compatible_with = ?, compatibility_rationale = ?,
+       fragment_action = ?, merge_target = ?, merge_content = ?, optimization_targets = ?,
+       status = ?, updated_at = datetime('now')
      WHERE id = ?`,
     [analysis.analysisJson, analysis.scoreRelevance, analysis.scoreStructure, analysis.scoreActionability,
      analysis.scoreUniqueness, analysis.scoreCompleteness, analysis.scoreWeighted,
+     analysis.scoreProblemAccumulation ?? null, analysis.scoreGranularity ?? null,
+     analysis.scoreIntegrationFit ?? null, analysis.scoreOptimizationPotential ?? null,
      analysis.aiRecommendation, analysis.suggestedCategory, analysis.suggestedTags,
      analysis.suggestedType, analysis.suggestedDifficulty, analysis.duplicateOf,
-     analysis.summaryEn, analysis.summaryCn, analysis.status, id]
+     analysis.summaryEn, analysis.summaryCn,
+     analysis.compatibleWith ?? null, analysis.compatibilityRationale ?? null,
+     analysis.fragmentAction ?? null, analysis.mergeTarget ?? null,
+     analysis.mergeContent ?? null, analysis.optimizationTargets ?? null,
+     analysis.status, id]
   );
 }
 

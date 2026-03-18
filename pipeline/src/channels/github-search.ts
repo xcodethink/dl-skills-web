@@ -34,15 +34,30 @@ const MIN_STARS = 3;
 /** Search queries covering different discovery vectors. */
 const SEARCH_QUERIES = {
   repos: [
+    // Claude Code skills
     'claude-code skills in:name,description fork:false',
     'claude skills agent in:name fork:false stars:>2',
     'claude-code topic:skills fork:false',
     'SKILL.md claude in:readme fork:false stars:>2',
+    // Codex / OpenAI agent skills
+    'codex skills agent in:name,description fork:false stars:>2',
+    'AGENTS.md openai in:readme fork:false stars:>2',
+    'codex-cli skills in:name fork:false',
+    // Cursor rules
+    'cursorrules AI coding in:name,description fork:false stars:>5',
+    // Generic AI coding skills
+    'AI coding agent skills in:name fork:false stars:>10',
   ],
   code: [
     'filename:SKILL.md path:skills/ "description"',
     '"claude-code" filename:SKILL.md',
     '"iron laws" OR "iron rules" filename:SKILL.md',
+    // Codex-specific patterns
+    'filename:AGENTS.md "instructions"',
+    'filename:codex.md "agent"',
+    // Troubleshooting / problem-accumulation content (rare and valuable)
+    '"common errors" OR "troubleshooting" OR "gotchas" filename:SKILL.md',
+    '"common mistakes" OR "pitfalls" path:skills/',
   ],
 };
 

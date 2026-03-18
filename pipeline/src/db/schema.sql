@@ -31,22 +31,37 @@ CREATE TABLE IF NOT EXISTS candidates (
   raw_token_count INTEGER,
   format TEXT,                            -- standard-skill | flat-markdown | awesome-link | mixed | single-file
 
-  -- AI analysis results
+  -- AI analysis results (9-dimension scoring)
   analysis_json TEXT,                     -- Full JSON from Claude
-  score_relevance REAL,
-  score_structure REAL,
-  score_actionability REAL,
-  score_uniqueness REAL,
-  score_completeness REAL,
+  score_relevance REAL,                   -- Renamed: content_quality — 内容本身质量
+  score_structure REAL,                   -- Renamed: problem_solving — 具体解决什么问题
+  score_actionability REAL,               -- Renamed: scene_fitness — 适合什么场景
+  score_uniqueness REAL,                  -- Renamed: ai_readability — AI 能否读懂
+  score_completeness REAL,                -- Renamed: rigor — 严谨性和全面性
   score_weighted REAL,
-  ai_recommendation TEXT,                 -- ACCEPT | REVIEW | REJECT
+  -- New scoring dimensions
+  score_problem_accumulation REAL,        -- 问题积累价值（常见错误、踩坑记录）
+  score_granularity REAL,                 -- 细分场景匹配度
+  score_integration_fit REAL,             -- 片段并入 vs 独立文件的判断
+  score_optimization_potential REAL,      -- 对已有内容的优化潜力
+  ai_recommendation TEXT,                 -- ACCEPT | REVIEW | REJECT | MERGE_FRAGMENT
   suggested_category TEXT,                -- Mapped to unified category ID
   suggested_tags TEXT,                    -- JSON array: ["tdd", "testing"]
-  suggested_type TEXT,                    -- discipline | tool | process | reference
+  suggested_type TEXT,                    -- discipline | tool | process | reference | troubleshooting
   suggested_difficulty TEXT,              -- starter | intermediate | advanced
   duplicate_of TEXT,                      -- Existing skill ID if duplicate, else null
   summary_en TEXT,                        -- One-line English summary
   summary_cn TEXT,                        -- One-line Chinese summary
+
+  -- Platform compatibility
+  compatible_with TEXT,                   -- JSON array: ["claude-code", "codex", "cursor"]
+  compatibility_rationale TEXT,           -- Why this suits specific platforms
+
+  -- Fragment extraction (for partial merging)
+  fragment_action TEXT,                   -- standalone | merge_into | split_merge | optimize_existing
+  merge_target TEXT,                      -- Target file path if fragment_action = merge_into
+  merge_content TEXT,                     -- Extracted fragment content to merge
+  optimization_targets TEXT,              -- JSON array of existing files that need optimization
 
   -- Review state machine:
   -- pending_analysis → analyzed → pending_review → approved → translating → translated → publishing → published

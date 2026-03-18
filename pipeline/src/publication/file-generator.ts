@@ -1,6 +1,9 @@
 /**
  * Generates content files and registry entries from translated candidates.
  *
+ * v2: Supports platform compatibility tags (claude-code, codex, cursor),
+ *     fragment merges, and troubleshooting type.
+ *
  * Maps candidates to the project's content structure:
  *   content/{source}-cn/{category}/{seq}-{name}.md
  *   content/{source}-en/{category}/{seq}-{name}.md
@@ -52,7 +55,7 @@ export async function generatePublicationPackage(): Promise<PublicationPackage> 
      FROM candidates c
      JOIN sources s ON c.source_id = s.id
      WHERE c.status = 'translated'
-     ORDER BY c.created_at ASC
+     ORDER BY c.score_weighted DESC
      LIMIT 50`
   );
 
@@ -90,17 +93,21 @@ export async function generatePublicationPackage(): Promise<PublicationPackage> 
     files.push({ path: pathCn, content: translatedCn });
     files.push({ path: pathEn, content: translatedEn });
 
-    // Registry entry
+    // Parse platform compatibility
+    const compatibleWith = parseCompatibility(row);
+    const skillType = (row.override_type || row.suggested_type || 'tool') as string;
+
+    // Registry entry with enhanced fields
     const registryKey = `${sourceName}/${catInfo.cn}/${slugCn}`;
     registryEntries.push({
       key: registryKey,
       entry: {
         unifiedCategory: category,
         tags: JSON.parse((row.override_tags || row.suggested_tags || '[]') as string),
-        type: (row.override_type || row.suggested_type || 'tool') as string,
+        type: skillType,
         difficulty: (row.override_difficulty || row.suggested_difficulty || 'intermediate') as string,
         verified: false,
-        compatibleWith: ['claude-code'],
+        compatibleWith,
         highlight_cn: highlightCn,
         highlight_en: highlightEn,
         paired_en: `${sourceName}/${catInfo.en}/${slugEn}`,
@@ -111,6 +118,23 @@ export async function generatePublicationPackage(): Promise<PublicationPackage> 
   }
 
   return { files, registryEntries, candidateIds };
+}
+
+/**
+ * Parse platform compatibility from candidate row.
+ * Returns an array like ['claude-code', 'codex', 'cursor'].
+ */
+function parseCompatibility(row: Record<string, unknown>): string[] {
+  // Try the new compatible_with field first
+  if (row.compatible_with) {
+    try {
+      const parsed = JSON.parse(row.compatible_with as string);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch { /* fall through */ }
+  }
+
+  // Fallback: default to claude-code only
+  return ['claude-code'];
 }
 
 function deriveSourceName(sourceId: string): string {

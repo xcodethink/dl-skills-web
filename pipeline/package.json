@@ -4,8 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "daily": "tsx src/daily-pipeline.ts",
+    "daily:dry": "tsx src/daily-pipeline.ts --skip-publish",
+    "daily:no-discover": "tsx src/daily-pipeline.ts --skip-discover",
     "discover": "tsx src/discover.ts",
     "analyze": "tsx src/analyze.ts",
+    "refine": "tsx src/refine.ts",
     "translate": "tsx src/translate.ts",
     "publish": "tsx src/publish.ts",
     "health-check": "tsx src/health-check.ts"
