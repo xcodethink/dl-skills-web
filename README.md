@@ -14,8 +14,8 @@
     <img src="https://img.shields.io/badge/categories-15-green" alt="Categories" />
     <img src="https://img.shields.io/badge/sources-17-orange" alt="Sources" />
     <img src="https://img.shields.io/badge/languages-CN%20%7C%20EN-purple" alt="Languages" />
-    <img src="https://img.shields.io/github/license/xcodethink/claudecodeSkills" alt="License" />
-    <img src="https://img.shields.io/github/stars/xcodethink/claudecodeSkills?style=social" alt="Stars" />
+    <img src="https://img.shields.io/github/license/xcodethink/claudecodeskills" alt="License" />
+    <img src="https://img.shields.io/github/stars/xcodethink/claudecodeskills?style=social" alt="Stars" />
   </p>
 </p>
 
@@ -176,11 +176,11 @@ cp cn/06-测试/测试驱动开发-TDD.md ~/.claude/skills/tdd/SKILL.md
 
 ## Star History
 
-<a href="https://star-history.com/#xcodethink/claudecodeSkills&Date">
+<a href="https://star-history.com/#xcodethink/claudecodeskills&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=xcodethink/claudecodeSkills&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=xcodethink/claudecodeSkills&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=xcodethink/claudecodeSkills&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=xcodethink/claudecodeskills&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=xcodethink/claudecodeskills&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=xcodethink/claudecodeskills&type=Date" />
  </picture>
 </a>
 
